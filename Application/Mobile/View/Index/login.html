@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="__PUBLIC__/Mobile/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="__PUBLIC__/Mobile/css/index.css" rel="stylesheet" type="text/css" />
+    <link href="__ROOT__/Public/Admin/css/H-ui.min.css" rel="stylesheet" type="text/css" /><!-- 弹出框 -->    
+    <title>登录</title>
+</head>
+<body>
+<!--头部-->
+<div class="header">后台管理系统</div>
+<div class="login-con">
+    <input type="text" name="username" placeholder="账号">
+    <input type="password" name="password" placeholder="密码">
+    <div class="clear"></div>
+    <a href="javascript:;" id="checklogin"><div class="btn-login">登陆</div></a>
+</div>
+<div class="login-time">&copy;2016</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+$('#checklogin').click(function(){
+	var username=$("input[name='username']").val();
+	var password=$("input[name='password']").val();
+	if(username==''){
+		layer.msg('用户名不能为空..',{icon:2,time:1000});
+	}else if(password==''){
+		layer.msg('密码不能为空..',{icon:2,time:1000});
+	}else{
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/checklogin')}",
+			dataType:'json',
+			data:{'username':username,'password':password},
+			success:function(Msg){
+				console.info(Msg);
+				if(Msg==1){
+					layer.msg('验证通过',{icon:1,time:1000});
+					window.location.href="{:U('Index/index')}";
+				}else{
+					layer.msg('用户名或密码错误',{icon:2,time:1000});
+				}
+			}
+		});
+	}
+});
+</script>
+</body>
+</html>

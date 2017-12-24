@@ -1,0 +1,109 @@
+
+<include file="Public:header" />
+
+<body class="pos-r">
+
+<div style="margin-left:0px;">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 系统管理 <span class="c-gray en">&gt;</span> 晋级设置 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	<div class="pd-20">
+		
+		<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a class="btn btn-primary radius" onclick="product_add('添加等级','{:U('System/promoted')}')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加等级</a></span> <span class="r">共有数据：<strong>{$countPromoted}</strong> 条</span> </div>
+		<div class="mt-20">
+			<table class="table table-border table-bordered table-bg table-hover table-sort">
+				<thead>
+					<tr class="text-c">
+						<th width="80">编号</th>
+						<th width="180">等级名称</th>
+						<th width="280">等级区间</th>
+						<th>描述</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				<foreach name="promotedMsg" item="val">
+					<tr class="text-c va-m">
+						<td>{++$key}</td>
+						<td>{$val.name}</td>
+						<td class="text-c"> {$val.shuttle}</td>
+						<td class="text-c">{$val.content}</td>
+						<td class="td-manage">
+							<a style="text-decoration:none" class="ml-5" onClick="product_edit('等级修改','{:U('System/promoted_edit',array('id'=>$val['id']))}','{$val.id}')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
+							<a style="text-decoration:none" class="ml-5" onClick="product_del(this,'{$val.id}')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						</td>
+					</tr>
+				</foreach>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+	"aoColumnDefs": [
+	  {"orderable":false,"aTargets":[0]}// 制定列不参与排序
+	]
+});
+
+/*图片-下架*/
+function product_stop(obj,id){
+	layer.confirm('确认要下架吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="product_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+		$(obj).remove();
+		layer.msg('已下架!',{icon: 5,time:1000});
+	});
+}
+
+/*图片-发布*/
+function product_start(obj,id){
+	layer.confirm('确认要发布吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="product_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+		$(obj).remove();
+		layer.msg('已发布!',{icon: 6,time:1000});
+	});
+}
+
+/*图片-编辑*/
+function product_edit(title,url,id){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-删除*/
+function product_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			url:"{:U('System/promoted_del')}",
+			type:'post',
+			dataType:'json',
+			data:{'id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+					setTimeout("window.location.reload()",1000);
+				}else{
+					layer.msg('操作失败！请重试...',{icon:2,time:1000});
+				}
+			}
+		});
+		
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20" style="padding-top:20px;">
+  <p class="f-20 text-success">欢迎进入三联球队后台管理系统！</p>
+  <table class="table table-border table-bordered table-bg">
+    <thead>
+      <tr>
+        <th colspan="7" scope="col">信息统计</th>
+      </tr>
+      <tr class="text-c">
+        <th>统计</th>
+        <th>图片库</th>
+        <th>视频库</th>
+        <th>球队总数</th>
+        <th>管理员</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="text-c">
+        <td>总数</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>10</td>
+      </tr>
+      
+    </tbody>
+  </table>
+  <table class="table table-border table-bordered table-bg mt-20">
+    <thead>
+      <tr>
+        <th colspan="2" scope="col">服务器信息</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th width="200">服务器计算机名</th>
+        <td><span id="lbServerName">{$_SERVER["SERVER_NAME"]}</span></td>
+      </tr>
+      
+      <tr>
+        <td>服务器IIS版本 </td>
+        <td>{$_SERVER['SERVER_SOFTWARE']}</td>
+      </tr>
+      
+      <tr>
+        <td>服务器操作系统 </td>
+        <td>{$_SERVER['HTTP_USER_AGENT']}</td>
+      </tr>
+      
+      <tr>
+        <td>当前登陆时间 </td>
+        <td>{$time}</td>
+      </tr>
+      
+      <tr>
+        <td>当前系统用户名 </td>
+        <td>{$_SESSION['AdminUserMsg']['username']}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<footer class="footer">
+  <p><!-- 本后台系统由峰云微科技有限公司提供，感谢您的使用 --><br><a href="#" target="_blank" title=""><!-- 峰云微科技有限公司 --></a><!-- 地址：成都市青羊区太升北路时代天骄大厦22-13号 --></p>
+</footer>
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script>-->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script>-->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?080836300300be57b7f34f4b3e97d911";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F080836300300be57b7f34f4b3e97d911' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>
+</html>

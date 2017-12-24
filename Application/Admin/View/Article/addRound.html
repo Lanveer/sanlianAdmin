@@ -1,0 +1,134 @@
+<include file="Public:header" />
+<article class="page-container">
+    <form action="" method="post" class="form form-horizontal" id="form-label-add">
+
+        <div class="row cl">
+            <label class="form-label col-3"><span class="c-red">*</span>标题：</label>
+            <div class="formControls col-9">
+                <input type="text" class="input-text" name="title" value="" placeholder="" autocomplete="off">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3"><span class="c-red">*</span>类型：</label>
+            <div class="formControls col-9">
+                <span class="select-box">
+                    <select class="select" size="1" name="type">
+                        <if condition="$competition_type eq 0">
+                            <option value="2" selected>循环赛</option>
+                            <elseif condition="$competition_type eq 1"/>
+                            <option value="0" selected>小组赛</option>
+                            <option value="1" >淘汰赛</option>
+                            <elseif condition = "$competition_type eq 2"/>
+                            <option value="1" selected>淘汰赛</option>
+                            <else/>
+                            出错了
+                        </if>
+
+                    </select>
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-3"><span class="c-red">*</span>轮次数：</label>
+            <div class="formControls col-9">
+                <input type="text" class="input-text" name="round_num" value="" placeholder="" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-3"><span class="c-red">*</span>比赛日期：</label>
+            <div class="formControls col-9">
+                <input type="date" class="input-text" name="date" value="" placeholder="" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <div class="col-3"></div>
+            <div class="col-9">
+                <input type="hidden" name="competition_id" value="{$competition_id}">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</article>
+
+<script type="text/javascript">
+
+    $(function(){
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#form-label-add").validate({
+            rules:{
+                "competition_id":"required",
+                "date":"required",
+                "title":"required",
+                "type":"required",
+                "round_num":{
+                    required:true,
+                    digits:true,
+                    min:1
+                }
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                $(form).ajaxSubmit({
+                    "url":"__URL__/doAddRound",
+                    "success":function (data) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.search();
+                        parent.layer.msg("新增成功",{icon: 1,time:1000});
+                        parent.layer.close(index);
+                    },
+                    "error":function (data) {
+                        layer.msg(data.responseText,{icon: 5,time:1000});
+                    }
+                });
+
+            }
+        });
+
+    });
+    function setImagePreview(avalue) {
+        //input
+        var docObj = document.getElementById("doc");
+        //img
+        var imgObjPreview = document.getElementById("preview");
+        //div
+        var divs = document.getElementById("localImag");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'inline-block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch(e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+</script>

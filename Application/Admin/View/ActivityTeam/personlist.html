@@ -1,0 +1,121 @@
+
+<include file="Public:header" />
+
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 球队管理 <span class="c-gray en">&gt;</span> 球员列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+	
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">  <a class="btn btn-primary radius" onclick="product_add('添加球员','{:U('ActivityTeam/addperson')}','800','700')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加球员</a>  <a class="btn btn-primary radius" href="{:U('Exportexcel/getUserExcel')}"><i class="Hui-iconfont">&#xe644;</i> 导出信息</a></span> <span class="r">共有数据：<strong>{$countPerson}</strong> 条</span> </div>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="70">球员编号</th>
+					<th width="80">球员昵称</th>
+					<th width="200">头像</th>
+					<th width="80">三联币</th>
+					<th width="120">联系电话</th>
+					<th width="120">备注</th>
+					<th width="70">性别</th>					
+					<th width="120">申请时间</th>
+					<th width="100">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<foreach name="personMsg" item="val">
+				<tr class="text-c">
+					<td>{++$key}</td>
+					<td>{$val.nickname}</td>
+					<td><img src="{$val.avatar}" width="30" height="30"></td>
+					<td><a style="text-decoration:none;" onClick="product_add('编辑信息','{:U('ActivityTeam/sanlianMoney_edit',array('user_id'=>$val['user_id']))}','500','300')" href="javascript:;" title="编辑">{$val.san_money}</a></td>
+					<td class="text-l">{$val.phone}</td>
+					<td class="text-c">
+						<empty name="val.remark">
+							<a style="text-decoration:none;" onClick="product_add('编辑信息','{:U('ActivityTeam/remark_edit',array('user_id'=>$val['user_id']))}','500','300')" href="javascript:;" title="编辑">--</a>
+							<else/>
+							<a style="text-decoration:none;" onClick="product_add('编辑信息','{:U('ActivityTeam/remark_edit',array('user_id'=>$val['user_id']))}','500','300')" href="javascript:;" title="编辑">{$val.remark}</a>
+						</empty>
+						{$val.email}
+					</td>
+					<td>
+						<if condition="$val['sex'] eq 0">保密
+						<elseif condition="$val['sex'] eq 1" />男
+						<else />女</if>
+					</td>
+					
+					<td>{$val.create_time}</td>
+					<td class="f-14 product-brand-manage">
+					<a style="text-decoration:none" onClick="person_add('发送消息','{:U('ActivityTeam/message',array('deviceuuid'=>$val['deviceuuid'],'user_id'=>$val['user_id']))}','800','500')" href="javascript:;" title="发送消息"><i class="Hui-iconfont">&#xe68a;</i></a>  
+					<a style="text-decoration:none" class="ml-5" onClick="product_del(this,'{$val.user_id}')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+				</tr>
+			</foreach>
+			</tbody>
+		</table>
+	</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+	"aoColumnDefs": [
+	  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+	  {"orderable":false,"aTargets":[0]}// 制定列不参与排序
+	]
+});
+function person_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+
+/*图片-添加*/
+function product_add(title,url,w,h){
+	
+	layer_show(title,url,w,h);
+}
+/*图片-查看*/
+function product_show(title,url,id){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+
+/*图片-编辑*/
+function product_edit(title,url,id){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-删除*/
+function product_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			url:"{:U('ActivityTeam/person_del')}",
+			type:'post',
+			dataType:'json',
+			data:{'id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}else{
+					layer.msg('删除失败!',{icon:2,time:1000});
+				}
+			}
+		});
+	});
+}
+</script>
+</body>
+</html>

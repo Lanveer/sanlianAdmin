@@ -1,0 +1,268 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+	<form class="form form-horizontal">
+		<div class="row cl">	
+			<label class="form-label col-2">球队名称：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$user.team_name}" class="input-text">
+			</div>			
+			<label class="form-label col-1">球场名称：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$courtMsg.name}" class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-2">球队成立时间：</label>
+			<div class="formControls col-2">
+				<input type="text" style="" name="" id="" disabled placeholder="" value="{$ballTeamMsg.build_time}" class="input-text">
+			</div>			
+			<label class="form-label col-1">球场介绍：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$courtMsg.intro}" class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-2">球队队徽：</label>
+			<div class="formControls col-2">
+				<img src="{$ballTeamMsg.logo}" width="150px" height="150px" />
+			</div>			
+			<label class="form-label col-1">球场封面：</label>
+			<div class="formControls col-2">
+				<img src="{$courtMsg.image_thumb}" width="150px" height="150px" />
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-2">球队联系电话：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$user.user_phone}" class="input-text">
+			</div>			
+			<label class="form-label col-1">球场联系电话：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$courtMsg.phone}" class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-2">领队人名称：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$friendlyMsg.username}" class="input-text">
+			</div>			
+			<label class="form-label col-1">球场退款时间限制：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$courtMsg.time_limit}" class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-1"></label>
+			<div class="formControls col-6">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="裁判" class="input-text">
+			</div>
+		</div>
+				
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">裁判组名称：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$refereeMsg['name']?$refereeMsg['name']:'无'}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">价格：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$refereeMsg['price']?$refereeMsg['price']:'无'}" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-1"></label>
+			<div class="formControls col-6">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="视频服务" class="input-text">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">是否预约视频服务：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$friendlyMsg['cameraman_id']?'是':'否'}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">价格：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="免费" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-1"></label>
+			<div class="formControls col-6">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="比赛订单详情" class="input-text">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">比赛开始时间：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$friendlyMsg.start_time}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">比赛结束时间：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$friendlyMsg.end_time}" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">当前支付流水号：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$orderMsg.order_no}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">当前交易金额：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$orderMsg.price}" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">三联币：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$orderMsg.san_money}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">订单创建时间：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$orderMsg.create_time}" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">支付方式：</span></label>
+			<div class="formControls col-2">
+			<if condition="$orderMsg['pay_type'] eq 1">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="支付宝" class="input-text">
+			<elseif condition="$orderMsg['pay_type'] eq 2" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="微信" class="input-text">
+			</if>
+				
+			</div>
+			
+			<label class="form-label col-1"><span class="c-red">当前交易状态：</span></label>
+			<div class="formControls col-2">
+			<if condition="$orderMsg['status'] eq 1">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="待付款" class="input-text">
+			<elseif condition="$orderMsg['status'] eq 2" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="已付款" class="input-text">
+			<elseif condition="$orderMsg['status'] eq 3" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="申请退款中" class="input-text">
+			<elseif condition="$orderMsg['status'] eq 4" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="已退款" class="input-text">
+			<elseif condition="$orderMsg['status'] eq 5" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="已放弃" class="input-text">
+			<elseif condition="$orderMsg['status'] eq 6" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="已使用" class="input-text">
+			</if>				
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">地址：</span></label>
+			<div class="formControls col-5">
+				<input type="text" style="border:0" value="{$courtMsg.address}" disabled name="" id="" class="input-text">
+			</div>					
+		</div>
+		<if condition="$orderMsg['status'] eq 3">
+		<div class="row cl">
+	      <label class="form-label col-2">退款说明：</label>
+	      <div class="formControls col-5">
+	        <textarea name="intro" disabled cols="" rows="" class="textarea" dragonfly="true" nullmsg="请填写退款说明！" onKeyUp="textarealength(this,100)"></textarea>
+	        <p class="textarea-numberbar"><!-- <em class="textarea-length">0</em>/100 --></p>
+	      </div>
+	      <div class="col-5"> </div>
+	      
+	    </div>
+	    
+	    <div class="row cl">
+			<div class="col-10 col-offset-2">
+				<button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 同意退款</button>
+				
+				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;拒绝退款&nbsp;&nbsp;</button>
+			</div>
+		</div>
+		</if>
+		<div style="position:absolute;right:20px;top:5px;">
+			<div class="formControls col-0" style="width:400px;">
+			<foreach name="teamUserMsg" item="val">
+				<div class="formControls col-5" style="width:400px;margin-top:20px;float:right;">
+					<img src="{$val['userMsg']['avatar']}" width="60px" height="60px" style="float:left;"/>
+					<div class="formControls" style="float:left;margin-left:20px;">
+						<div class="">
+							<span class="">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：{$val['userMsg']['nickname']}</span>
+						</div>
+						
+						<div class="">
+							<span class="">联系电话：{$val['userMsg']['phone']}</span>
+						</div>
+						<div class="">
+							<span class="">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：{$val.type}</span>
+						</div>
+						<div class="col-5"> </div>
+						
+					</div>
+				</div>
+			</foreach>
+				
+				<label class="form-label col-7">球队成员信息</label>			
+			</div>
+						
+			
+		</div>
+		
+						
+		
+		
+	</form>
+</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/map.js"></script> 
+<script type="text/javascript">
+$(function(){
+	if($('#close').html()==1){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场添加成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}else if($('#close').html()==2){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场添加成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}
+});
+
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-user-add").Validform({
+		tiptype:2,
+		callback:function(form){			
+			form[0].submit();
+			//var index = parent.layer.getFrameIndex(window.name);
+			//parent.$('.btn-refresh').click();
+			//parent.layer.close(index);
+		}
+	});
+});
+</script>
+
+<script type="text/javascript">
+</script>
+</body>
+</html>

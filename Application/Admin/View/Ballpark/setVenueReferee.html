@@ -1,0 +1,133 @@
+<include file="Public:header" />
+<style>
+
+</style>
+<article class="page-container">
+    <form action="" method="post" class="form form-horizontal" id="form-label-add" style="margin-bottom: 20px">
+
+        <div class="row cl">
+            <label class="form-label col-2"><span style="color: red">*</span>裁判组：</label>
+            <div class="formControls col-10">
+                <div class="skin-minimal">
+                    <foreach name="referees" item="referee">
+                        <div class="check-box">
+                            <input type="checkbox" id="referee_{$referee.id}" name="referee[{$referee.id}]" value="1" {$referee['checked']==1 ? 'checked':''}>
+                            <label for="referee_{$referee.id}">{$referee.name}</label>
+                        </div>
+                    </foreach>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <input type="hidden" name="venue_id" value="{$venue.venue_id}">
+                <input class="btn btn-primary radius f-r" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+
+</article>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    var $list = $("#fileList");
+
+
+    $(function(){
+
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#form-label-add").validate({
+            rules:{
+//                "img":"required",
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                $(form).ajaxSubmit({
+                    "url":"__URL__/doSetVenueReferee",
+                    "success":function (data) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.msg("修改成功",{icon: 1,time:1000});
+                        parent.layer.close(index);
+                    },
+                    "error":function (data) {
+                        layer.msg(data.responseText,{icon: 5,time:1000});
+                    }
+                });
+
+            }
+        });
+
+    });
+
+    $("#search_c").blur(function () {
+        searchCommodity();
+    });
+
+    function searchCommodity(){
+        var url = "__URL__/searchCommodity";
+        var search = $("#search_c").val();
+        $.post(url,{search:search})
+                .success(function (data) {
+                    renderCommodity(data);
+                })
+    }
+
+    function renderCommodity(data){
+        var $commodity_id = $("#commodity_id");
+        $commodity_id.empty();
+        $.each(data, function (index, value) {
+            var node = document.createElement('option');
+            node.value = value['id'];
+            node.text = value['title'];
+            $commodity_id.append(node);
+        })
+    }
+
+    function setImagePreview(avalue) {
+        //input
+        var docObj = document.getElementById("doc");
+        //img
+        var imgObjPreview = document.getElementById("preview");
+        //div
+        var divs = document.getElementById("localImag");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'inline-block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch(e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+</script>

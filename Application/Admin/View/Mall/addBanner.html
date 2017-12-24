@@ -1,0 +1,286 @@
+<include file="Public:header" />
+<link rel="stylesheet" href="__PUBLIC__/Admin/lib/webuploader/0.1.5/webuploader.css">
+<style>
+
+</style>
+<script type="text/javascript" src="__PUBLIC__/Admin/lib/webuploader/0.1.5/webuploader.js"></script>
+<article class="page-container">
+    <form action="" method="post" class="form form-horizontal" id="form-label-add" style="margin-bottom: 20px">
+
+        <div class="row cl">
+            <label class="form-label col-2"><span style="color: red">*</span>Banner：</label>
+            <div class="formControls col-10">
+                <img id="preview" src="" width="100" height="100" style="display: inline-block;border: 1px dashed blue;" />
+                <span class="btn-upload form-group" style="margin-left: 30px;">
+					<a href="javascript:void(0);" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览图片</a>
+					<input type="file" multiple name="img" class="input-file" id="doc" onchange="setImagePreview()">
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-2"><span class="c-red">*</span>状态：</label>
+            <div class="formControls col-10">
+                <span class="select-box">
+                    <select class="select" size="1" id="status" name="status">
+                        <option value="1" selected>上架</option>
+                        <option value="0">下架</option>
+                    </select>
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-2"><span class="c-red">*</span>类型：</label>
+            <div class="formControls col-10">
+                <span class="select-box">
+                    <select class="select" size="1" id="type" name="type">
+                        <option value="0" selected>链接</option>
+                        <option value="1">商品</option>
+                        <option value="2">富文本</option>
+                    </select>
+				</span>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-2"><span style="color: red">*</span>链接地址：</label>
+            <div class="formControls col-10">
+                <input type="text" class="input-text" value="" placeholder="" id="url" name="url" autocomplete="off">
+            </div>
+        </div>
+
+
+        <div class="row cl">
+            <label class="form-label col-2"><span class="c-red">*</span>商品：</label>
+            <div class="formControls col-10">
+                <span class="select-box" style="width: 50%;">
+                    <select class="select" size="1" id="commodity_id" name="commodity_id">
+                        <option value="0" selected>否</option>
+                        <option value="1">是</option>
+                    </select>
+				</span>
+                <input type="text" class="input-text" style="width: 40%;float: right;" value="" id="search_c" placeholder="检索商品名称" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-2"><span class="c-red">*</span>富文本：</label>
+            <div class="formControls col-10">
+                <script id="editor" type="text/plain" name="html" style="width:100%;height:400px;"></script>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <input class="btn btn-primary radius f-r" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+
+</article>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    var $list = $("#fileList");
+
+
+    $(function(){
+        searchCommodity();
+        var ue = UE.getEditor('editor');
+
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#form-label-add").validate({
+            rules:{
+                "img":"required",
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                $(form).ajaxSubmit({
+                    "url":"__URL__/doAddBanner",
+                    "success":function (data) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.search();
+                        parent.layer.msg("新增成功",{icon: 1,time:1000});
+                        parent.layer.close(index);
+                    },
+                    "error":function (data) {
+                        layer.msg(data.responseText,{icon: 5,time:1000});
+                    }
+                });
+
+            }
+        });
+
+    });
+
+    $("#search_c").blur(function () {
+        searchCommodity();
+    });
+
+    function searchCommodity(){
+        var url = "__URL__/searchCommodity";
+        var search = $("#search_c").val();
+        $.post(url,{search:search})
+                .success(function (data) {
+                    renderCommodity(data);
+                })
+    }
+
+    function renderCommodity(data){
+        var $commodity_id = $("#commodity_id");
+        $commodity_id.empty();
+        $.each(data, function (index, value) {
+            var node = document.createElement('option');
+            node.value = value['id'];
+            node.text = value['title'];
+            $commodity_id.append(node);
+        })
+    }
+
+    var uploader = WebUploader.create({
+        auto: true,
+
+        // swf文件路径
+        swf:  '__PUBLIC__/lib/webuploader/0.1.5/Uploader.swf',
+
+        // 文件接收服务端。
+        server: '__MODULE__/Upload/webUpload/img_type/1',
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#filePicker',
+
+        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+        resize: false,
+        duplicate:true,
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        }
+    });
+
+    // 当有文件添加进来的时候
+    uploader.on( 'fileQueued', function( file ) {
+        var $li = $(
+                        '<div id="' + file.id + '" class="file-item thumbnail">' +
+                        '<div onclick="delParent(this)" style="cursor: pointer;background: url('+"__PUBLIC__/Admin/images/del@2x.png"+') no-repeat;height: 20px;width: 20px;position: absolute;z-index: 10;right: 5px;"></div>'+
+                        '<img style="width: 100px;height: 100px;">' +
+                        '<input name="img[]" type="hidden" value="">'+
+                        '<div class="info">' + file.name + '</div>' +
+                        '</div>'
+                ),
+                $img = $li.find('img');
+
+
+        // $list为容器jQuery实例
+        $list.append( $li );
+
+        // 创建缩略图
+        // 如果为非图片文件，可以不用调用此方法。
+        // thumbnailWidth x thumbnailHeight 为 100 x 100
+        uploader.makeThumb( file, function( error, src ) {
+            if ( error ) {
+                $img.replaceWith('<span>不能预览</span>');
+                return;
+            }
+
+            $img.attr( 'src', src );
+        }, 100, 100 );
+    });
+
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+                $percent = $li.find('.progress span');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+            $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo( $li )
+                    .find('span');
+        }
+
+
+        $percent.css( 'width', percentage * 100 + '%' );
+    });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on( 'uploadSuccess', function( file,res ) {
+        var data = JSON.parse(res._raw);
+        var url = data.url;
+        $( '#'+file.id).find("img").attr("src",url);
+        $( '#'+file.id).find("input").val(url);
+        $( '#'+file.id ).addClass('upload-state-done');
+    });
+
+    // 文件上传失败，显示上传出错。
+    uploader.on( 'uploadError', function( file ) {
+        var $li = $( '#'+file.id ),
+                $error = $li.find('div.error');
+
+        // 避免重复创建
+        if ( !$error.length ) {
+            $error = $('<div class="error"></div>').appendTo( $li );
+        }
+
+        $error.text('上传失败');
+    });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').remove();
+    });
+
+    function delParent(object){
+        $(object).parent().remove();
+    }
+
+
+    function setImagePreview(avalue) {
+        //input
+        var docObj = document.getElementById("doc");
+        //img
+        var imgObjPreview = document.getElementById("preview");
+        //div
+        var divs = document.getElementById("localImag");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'inline-block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch(e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+</script>

@@ -1,0 +1,204 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+	<form class="form form-horizontal">
+		<div class="row cl">	
+			<label class="form-label col-2">昵称：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$userMsg.nickname}" class="input-text">
+			</div>			
+			<label class="form-label col-1">账号申请时间：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$userMsg.create_time}" class="input-text">
+			</div>		
+		</div>
+		<div class="row cl">
+			<label class="form-label col-2">电话：</label>
+			<div class="formControls col-5">
+				<input type="text" style="border:0" disabled value="{$userMsg.phone}" name="" id="" class="input-text">
+			</div>			
+		</div>
+		<div class="row cl">
+			<label class="form-label col-2">性别：</label>
+			<div class="formControls col-5">
+				<input type="text" style="border:0" disabled value="{$userMsg.sex}" name="" id="" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">邮箱：</label>
+			<div class="formControls col-5">
+				<input type="text" style="border:0" disabled value="{$userMsg.email}" name="" id="" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">设备号：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$userMsg.deviceuuid}" class="input-text">
+			</div>
+			<label class="form-label col-1">设备系统：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$userMsg.device}" class="input-text">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">身高：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$userMsg.height}" class="input-text">
+			</div>
+			<label class="form-label col-1">体重：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$userMsg.weight}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">当前支付流水号：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$orderMsg.order_no}" class="input-text">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">惯用：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$userMsg.customary}" class="input-text">
+			</div>
+			<label class="form-label col-1">擅长：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$userMsg.goodat}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">当前交易金额：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$orderMsg.price}" class="input-text">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">三联币：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$userMsg.san_money}" class="input-text">
+			</div>
+			<label class="form-label col-1">生日：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$userMsg.birthday}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">支付方式：</span></label>
+			<div class="formControls col-2">
+			<if condition="$orderMsg['pay_type'] eq 1">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="支付宝" class="input-text">
+			<elseif condition="$orderMsg['pay_type'] eq 2" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="微信" class="input-text">
+			</if>
+				
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">订单数量：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" disabled id="" placeholder="" value="{$userMsg.order_num}" class="input-text">
+			</div>
+			<label class="form-label col-1">累计充值金额：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$userMsg.recharge_money}" class="input-text">
+			</div>
+			<label class="form-label col-1"><span class="c-red">当前交易状态：</span></label>
+			<div class="formControls col-2">
+			<if condition="$orderMsg['status'] eq 0">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="未完成" class="input-text">
+			<elseif condition="$orderMsg['status'] eq 1" />
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="已完成" class="input-text">
+			</if>				
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">拥有的球队名称：</label>
+			<div class="formControls col-5">
+				<input type="text" style="border:0" value="{$ballName}" disabled name="" id="" class="input-text">
+			</div>	
+			<label class="form-label col-1"><span class="c-red">赠送金额：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$rechargeOrderMsg.send}" class="input-text">
+			</div>		
+		</div>
+		<div class="row cl">
+			<label class="form-label col-2">地区：</label>
+			<div class="formControls col-5">
+				<input type="text" style="border:0" value="{$userMsg.province_id}{$userMsg.city_id}{$userMsg.county_id}" disabled name="" id="" class="input-text">
+			</div>	
+			<label class="form-label col-1"><span class="c-red">订单创建时间：</span></label>
+			<div class="formControls col-2">
+				<input type="text" name="" style="border:0" id="" disabled placeholder="" value="{$orderMsg.create_time}" class="input-text">
+			</div>		
+		</div>
+			
+		<div class="row cl">
+	      <label class="form-label col-2">简介：</label>
+	      <div class="formControls col-5">
+	        <textarea name="intro" disabled cols="" rows="" class="textarea" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)">{$userMsg.intro}</textarea>
+	        <p class="textarea-numberbar"><!-- <em class="textarea-length">0</em>/100 --></p>
+	      </div>
+	      <div class="col-5"> </div>
+	      
+	    </div>
+		
+		<div style="position:absolute;right:300px;top:50px;">
+			<div class="formControls col-5">
+				<div class="formControls col-5" style="border:1px solid #ccc;width:180px;height:165px;float:right;">
+					<img src="{$userMsg.avatar}" width="180px" height="165px"/>
+				</div>
+			</div>
+			
+		</div>
+						
+		
+		
+	</form>
+</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/map.js"></script> 
+<script type="text/javascript">
+$(function(){
+	if($('#close').html()==1){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场添加成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}else if($('#close').html()==2){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场添加成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}
+});
+
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-user-add").Validform({
+		tiptype:2,
+		callback:function(form){			
+			form[0].submit();
+			//var index = parent.layer.getFrameIndex(window.name);
+			//parent.$('.btn-refresh').click();
+			//parent.layer.close(index);
+		}
+	});
+});
+</script>
+
+<script type="text/javascript">
+</script>
+</body>
+</html>

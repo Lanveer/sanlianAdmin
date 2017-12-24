@@ -1,0 +1,223 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+	<form action="{:U('Ballpark/editBallpark',array('court_id'=>$ballparkMsg['court_id']))}" onsubmit="return checkform()"  enctype="multipart/form-data" method="post" class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>球场名称：</label>
+			<div class="formControls col-3">
+				<input type="text" class="input-text" value="{$ballparkMsg.name}" required placeholder="请输入球场的名称" id="" name="name">
+			</div>
+		</div>
+				
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>电话：</label>
+			<div class="formControls col-3">
+				<input type="text" class="input-text" value="{$ballparkMsg.phone}" required placeholder="请输入联系电话" id="" name="phone">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>所属球馆：</label>
+			<div class="formControls col-2"> <span class="select-box">
+				<select name="venue_id" required class="select">
+				<foreach name="venueMsg1" item="val">
+					<option value="{$val.venue_id}" {$ballparkMsg['venue_id']==$val['venue_id']?'selected':''}>{$val.name}</option>
+				</foreach>
+				</select>
+				</span> 
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>球场封面图：</label>
+			<div class="formControls col-5">
+				<img style="height: 60px;" src="{$val.image_thumb}">
+				<span class="btn-upload form-group">
+					<a href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont"></i> 添加封面</a>
+					<input type="file" multiple="multipart/form-data"  name="file-2" class="input-file">
+				</span> 
+			</div>
+		</div>
+		
+		<div class="row cl mt-20 skin-minimal">
+			<label class="form-label col-2"><span class="c-red">*</span>是否冻结：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-1" value="1" {$ballparkMsg['is_freeze']==1?'checked':''} name="is_freeze">
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-2" value="0" {$ballparkMsg['is_freeze']==0?'checked':''} checked name="is_freeze">
+			    <label for="radio-2">否</label>
+			  </div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>球场类型：</label>
+			<div class="formControls col-3">
+				<input type="text" name="type" id="" required placeholder="请输入球场类型" value="{$ballparkMsg.type}" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl mt-20 skin-minimal">
+			<label class="form-label col-2"><span class="c-red">*</span>是否vip：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-1" value="1" {$ballparkMsg['is_vip']==1?'checked':''} name="is_vip">
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-2" value="0" {$ballparkMsg['is_vip']==0?'checked':''} name="is_vip">
+			    <label for="radio-2">否</label>
+			  </div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl mt-20 skin-minimal">
+			<label class="form-label col-2">开启vip打折：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-1" {$ballparkMsg['is_discount']==1?'checked':''} value="1" name="is_discount">
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-2" {$ballparkMsg['is_discount']==0?'checked':''} value="0" checked name="is_discount">
+			    <label for="radio-2">否</label>
+			  </div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">打折标签：</label>
+			<div class="formControls col-2"> <span class="select-box">
+				<select name="discount_tag" class="select">
+					<option value="" >==无打折标签==</option>
+					<option value="特价" {$ballparkMsg['discount_tag']=='特价'?'selected':''} >特价</option>
+					<option value="促销" {$ballparkMsg['discount_tag']=='促销'?'selected':''} >促销</option>
+					<option value="优惠" {$ballparkMsg['discount_tag']=='优惠'?'selected':''} >优惠</option>
+					<option value="免费" {$ballparkMsg['discount_tag']=='免费'?'selected':''} >免费</option>
+				</select>
+				</span> 
+				</div>
+			
+		</div>
+		
+		<div class="row cl mt-20 skin-minimal">
+			<label class="form-label col-2"><span class="c-red">*</span>预定裁判：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-1" value="1" {$ballparkMsg['is_referee']==1?'checked':''} name="is_referee">
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-2" value="0" {$ballparkMsg['is_referee']==0?'checked':''} name="is_referee">
+			    <label for="radio-2">否</label>
+			  </div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">排序：</label>
+			<div class="formControls col-3">
+				<input type="text" name="sort" id="" value="{$ballparkMsg.sort}" placeholder="请输入数字，数值越大越靠前，默认为0" class="input-text">
+			</div>			
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">退款时间限制：</label>
+			<div class="formControls col-3">
+				<input type="date" name="time_limit" id="" class="input-text">
+			</div>			
+		</div>
+		<!-- <div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>公交线路：</label>
+			<div class="formControls col-3">
+				<input type="text" name="bus_line" required id="" placeholder="" value="{$ballparkMsg.bus_line}" class="input-text">
+			</div>
+		</div> -->
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>详细地址：</label>
+			<div class="formControls col-3">
+				<input type="text" name="address" required id="" placeholder="" value="{$ballparkMsg.address}" class="input-text">
+			</div>
+		</div>
+		
+		<div class="row cl">
+	      <label class="form-label col-2"><span class="c-red">*</span>简介：</label>
+	      <div class="formControls col-3">
+	        <textarea name="intro" cols="" rows="" required class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)">{$ballparkMsg.intro}</textarea>
+	        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+	      </div>
+	      <div class="col-5"> </div>
+	    </div>
+		
+		<div style="position:absolute;right:10px;top:20px;">
+			<!-- <label class="form-label col-6">地图点选：</label> -->
+			<div class="formControls col-0">
+				<div class="formControls col-3" style="border:1px solid #ccc;width:500px;height:500px;float:right;">
+				<div style="background-color:transparent;">请在地图上选选择球场位置</div>
+					<div style="width:500px;height:500px;font-size:12px" id="map"></div>
+				</div>
+			</div>
+			
+		</div>
+		<input type="hidden" name="lat" value="{$ballparkMsg.lat}" />
+		<input type="hidden" name="lng" value="{$ballparkMsg.lng}" />
+				
+		<div class="row cl">
+			<div class="col-10 col-offset-2">
+				<button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 确定修改</button>
+				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/map.js"></script> 
+<script type="text/javascript">
+$(function(){
+	if($('#close').html()==1){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场修改成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}else if($('#close').html()==2){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场修改成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}
+});
+function checkform(){
+	if($("input[name='lat']").val()=='' || $("input[name='lng']").val()==''){
+		layer.msg('请在地图中点击选择球场位置',{icon:2,time:2000});
+		return false;
+	}
+}
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-user-add").Validform({
+		tiptype:2,
+		callback:function(form){			
+			form[0].submit();
+			//var index = parent.layer.getFrameIndex(window.name);
+			//parent.$('.btn-refresh').click();
+			//parent.layer.close(index);
+		}
+	});
+});
+</script>
+
+<script type="text/javascript">
+</script>
+</body>
+</html>

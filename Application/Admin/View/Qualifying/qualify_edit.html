@@ -1,0 +1,253 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+	<form action="{:U('Qualifying/qualifyMsg_edit')}" method="post" class="form form-horizontal">
+		<div class="row cl">	
+			<label class="form-label col-4">主战球队名称：</label>
+			<div class="formControls col-2">
+				<input type="text" name=""  disabled placeholder="" value="{$homeTeamMsg.name}" class="input-text">
+			</div>			
+			<label class="form-label col-1">应战球队名称：</label>
+			<div class="formControls col-2">
+				<input type="text" name="" disabled placeholder="" value="{$guestTeamMsg.name}" class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-4">主战球队球队队徽：</label>
+			<div class="formControls col-2">
+				<img src="{$homeTeamMsg.logo}" width="60px" height="60px" />
+			</div>			
+			<label class="form-label col-1">应战球队队徽：</label>
+			<div class="formControls col-2">
+				<img src="{$guestTeamMsg.logo}" width="60px" height="60px" />
+			</div>		
+		</div>
+		
+		<div class="row cl mt-20 skin-minimal">
+			<label class="form-label col-4"><span class="c-red">*</span>是否殴打裁判：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-1" value="1" name="home_hit">
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" checked value="0" name="home_hit">
+			    <label for="radio-2">否</label>
+			  </div>
+					
+			<label class="form-label col-2"><span class="c-red">*</span>是否殴打裁判：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" value="1" name="guest_hit">
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-2" checked value="0" name="guest_hit">
+			    <label for="radio-2">否</label>
+			  </div>
+			  
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-4">主战球队三联分：</label>
+			<div class="formControls col-2">
+				<input type="text" name="home_score" disabled value="{$homeTeamMsg['san_score']?$homeTeamMsg['san_score']:'0'}" placeholder="" class="input-text">
+			</div>			
+			<label class="form-label col-1">应战球队三联分：</label>
+			<div class="formControls col-2">
+				<input type="text" name="guest_score" disabled value="{$guestTeamMsg['san_score']?$guestTeamMsg['san_score']:'0'}" placeholder="" class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-4">主战球队进球数：</label>
+			<div class="formControls col-2">
+				<input type="text" name="home_goal" value="{$qualifyingMsg['home_goal']?$qualifyingMsg['home_goal']:'0'}" placeholder="" required class="input-text">
+			</div>			
+			<label class="form-label col-1">应战球队进球数：</label>
+			<div class="formControls col-2">
+				<input type="text" name="guest_goal" value="{$qualifyingMsg['guest_goal']?$qualifyingMsg['guest_goal']:'0'}" placeholder="" required class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-4">主战球队黄牌：</label>
+			<div class="formControls col-2">
+				<input type="text" name="home_yellow_card" value="{$qualifyingMsg['home_yellow_card']?$qualifyingMsg['home_yellow_card']:'0'}" placeholder="" required class="input-text">
+			</div>			
+			<label class="form-label col-1">应战球队黄牌：</label>
+			<div class="formControls col-2">
+				<input type="text" name="guest_yellow_card" value="{$qualifyingMsg['guest_yellow_card']?$qualifyingMsg['guest_yellow_card']:'0'}" placeholder="" required class="input-text">
+			</div>		
+		</div>
+		
+		<div class="row cl">	
+			<label class="form-label col-4">主战球队红牌：</label>
+			<div class="formControls col-2">
+				<input type="text" name="home_red_card" value="{$qualifyingMsg['home_red_card']?$qualifyingMsg['home_red_card']:'0'}" placeholder="" required class="input-text">
+			</div>			
+			<label class="form-label col-1">应战球队红牌：</label>
+			<div class="formControls col-2">
+				<input type="text" name="guest_red_card" value="{$qualifyingMsg['guest_red_card']?$qualifyingMsg['guest_red_card']:'0'}" placeholder="" required class="input-text">
+			</div>		
+		</div>
+			    	    
+	    <div class="row cl">
+			<div class="col-10 col-offset-5">
+				<div id="checkMsg" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe632;</i> 保存更改</div>
+				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+
+		<div style="position:absolute;right:20px;top:5px;">
+			<div class="formControls col-0" style="width:400px;">
+			<foreach name="guestTeamUser" item="val">
+				<div class="formControls col-5" style="width:400px;margin-top:20px;float:right;">
+					<img src="{$val.avatar}" width="60px" height="60px" style="float:left;"/>
+					<div class="formControls" style="float:left;margin-left:20px;">
+						<div class="">
+							<span class="">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：{$val.nickname}</span>
+						</div>
+						
+						<div class="">
+							<span class="">联系电话：{$val.phone}</span>
+						</div>
+						<div class="">
+							<span class="">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：{$val.type}</span>
+						</div>
+						<div class="col-5"> </div>
+						
+					</div>
+				</div>
+			</foreach>
+				<label class="form-label col-7">应战球队成员信息</label>			
+			</div>
+						
+			
+		</div>
+		
+		<div style="position:absolute;left:20px;top:5px;">
+			<div class="formControls col-0" style="width:400px;">
+			<foreach name="homeTeamUser" item="val">
+				<div class="formControls col-5" style="width:400px;margin-top:20px;float:right;">
+					<img src="{$val.avatar}" width="60px" height="60px" style="float:left;"/>
+					<div class="formControls" style="float:left;margin-left:20px;">
+						<div class="">
+							<span class="">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：{$val.nickname}</span>
+						</div>
+						
+						<div class="">
+							<span class="">联系电话：{$val.phone}</span>
+						</div>
+						<div class="">
+							<span class="">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：{$val.type}</span>
+						</div>
+						<div class="col-5"> </div>
+						
+					</div>
+				</div>
+			</foreach>
+				<label class="form-label col-7">主战球队成员信息</label>			
+			</div>
+						
+			
+		</div>
+		
+						
+		
+		
+	</form>
+</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/map.js"></script> 
+<script type="text/javascript">
+$(function(){
+	if($('#close').html()==1){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场添加成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}else if($('#close').html()==2){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('球场添加成功....',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}
+});
+
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-user-add").Validform({
+		tiptype:2,
+		callback:function(form){			
+			form[0].submit();
+			//var index = parent.layer.getFrameIndex(window.name);
+			//parent.$('.btn-refresh').click();
+			//parent.layer.close(index);
+		}
+	});
+});
+</script>
+
+<script type="text/javascript">
+$('#checkMsg').click(function(){	
+	var qualifying_id="{$qualifying_id}";
+	var home_score='';
+	var guest_score='';
+	var home_team_id="{$qualifyingMsg['home_team_id']}";
+	var guest_team_id="{$qualifyingMsg['guest_team_id']}";
+	var home_goal=$("input[name='home_goal']").val();
+	var guest_goal=$("input[name='guest_goal']").val();
+	var home_yellow_card=$("input[name='home_yellow_card']").val();
+	var guest_yellow_card=$("input[name='guest_yellow_card']").val();
+	var home_red_card=$("input[name='home_red_card']").val();
+	var guest_red_card=$("input[name='guest_red_card']").val();
+	var guest_hit=$("input[name='guest_hit']:checked").val();
+	var home_hit=$("input[name='home_hit']:checked").val();
+	
+	if(home_goal >=0 && guest_goal>=0){
+		if(home_goal > guest_goal){
+			home_score=10-home_yellow_card*1-home_red_card*5;
+			guest_score=0-guest_yellow_card*1-guest_red_card*5;
+		}else if(home_goal < guest_goal){
+			home_score=0-home_yellow_card*1-home_red_card*5;
+			guest_score=10-guest_yellow_card*1-guest_red_card*5;
+		}else if(home_goal == guest_score){
+			home_score=3;
+			guest_score=3;
+		}
+	}
+	var data={'qualifying_id':qualifying_id,'home_hit':home_hit,'guest_hit':guest_hit,'home_team_id':home_team_id,'guest_team_id':guest_team_id,'home_goal':home_goal,'guest_goal':guest_goal,'home_yellow_card':home_yellow_card,'guest_yellow_card':guest_yellow_card,
+			'home_red_card':home_red_card,'guest_red_card':guest_red_card};
+	
+	$.ajax({
+		url:"{:U('Qualifying/qualifyMsg_edit')}",
+		type:'post',
+		dataType:'json',
+		data:data,
+		success:function(Msg){
+			if(Msg){
+				layer.msg('信息修改成功....',{icon:1,time:2000});
+				setTimeout("window.parent.location.reload()",2000);
+			}else{
+				layer.msg('信息修改失败....',{icon:2,time:2000});
+				setTimeout("window.parent.location.reload()",2000);
+			}
+		}
+	});
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+  <form action="{:U('ActivityTeam/sendPersonMessage')}" method="post" class="form form-horizontal" id="form-user-add">
+  <input type="hidden" name="userid" value="{$userid}" />
+  <input type="hidden" name="deviceuuid" value="{$deviceuuid}" />
+    <div class="row cl">
+      <label class="form-label col-2"><span class="c-red">*</span>消息标题：</label>
+      <div class="formControls col-5">
+        <input type="text" class="input-text" required value="" placeholder="" id="user-name" name="title">
+      </div>
+      <div class="col-5"> </div>
+    </div>
+    <div class="row cl">
+      <label class="form-label col-2"><span class="c-red">*</span>内容：</label>
+      <div class="formControls col-5">
+        <textarea name="content" cols="" rows="" required class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-35" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,35)"></textarea>
+        <p class="textarea-numberbar"><em class="textarea-length">0</em>/35</p>
+      </div>
+      <div class="col-5"> </div>
+    </div>
+    <div class="row cl">
+      <div class="col-9 col-offset-2">
+        <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+      </div>
+    </div>
+  </form>
+</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+$(function(){
+	if($('#close').html()==1){
+		var index = parent.layer.getFrameIndex(window.name);
+		layer.msg('发送消息成功',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}
+});
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-user-add").Validform({
+		tiptype:2,
+		callback:function(form){
+			form[0].submit();
+			//var index = parent.layer.getFrameIndex(window.name);
+			//parent.$('.btn-refresh').click();
+			//parent.layer.close(index);
+		}
+	});
+});
+</script>
+</body>
+</html>

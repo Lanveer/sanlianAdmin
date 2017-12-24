@@ -1,0 +1,257 @@
+
+<include file="Public:header" />
+
+<body>
+<header class="Hui-header cl"> <a class="Hui-logo l" title="H-ui.admin v2.3" href="/">三联球场后台管理</a> <a class="Hui-logo-m l" href="/" title="H-ui.admin">H-ui</a> <span class="Hui-subtitle l">V2.3</span>
+	<ul class="Hui-userbar">
+		<li>
+			<switch name="Think.session.admin_key_auth">
+				<case value="1">超级管理员</case>
+				<case value="2">赛事管理员</case>
+				<case value="3">普通管理员</case>
+				<default>未知类型</default>
+			</switch>
+		</li>
+		<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">{:session("admin_key_loginname")} <i class="Hui-iconfont">&#xe6d5;</i></a>
+			<ul class="dropDown-menu radius box-shadow">
+				<li><a href="#">个人信息</a></li>
+				<li><a href="#">切换账户</a></li>
+				<li><a href="{:U('Login/loginout')}">退出</a></li>
+			</ul>
+		</li>
+		<li id="Hui-skin" class="dropDown right dropDown_hover"><a href="javascript:;" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+			<ul class="dropDown-menu radius box-shadow">
+				<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
+				<li><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></li>
+				<li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+				<li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+				<li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+				<li><a href="javascript:;" data-val="orange" title="绿色">橙色</a></li>
+			</ul>
+		</li>
+	</ul>
+	<a href="javascript:;" class="Hui-nav-toggle Hui-iconfont" aria-hidden="false">&#xe667;</a> </header>
+<aside class="Hui-aside">
+	<input runat="server" id="divScrollValue" type="hidden" value="" />
+	<div class="menu_dropdown bk_2">
+    
+    <if condition="session('admin_key_auth') eq 1 or  session('admin_key_auth') eq 2">
+		<if condition="session('admin_key_auth') eq 1">
+		<dl id="menu-article">
+			<dt><i class="Hui-iconfont">&#xe613;</i> 广告管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Advertisement/advertisement')}" data-title="幻灯片列表" href="javascript:void(0)">幻灯片列表</a></li>
+					<!-- <li><a _href="{:U('Advertisement/bannerlist')}" data-title="banner图" href="javascript:void(0)">banner图</a></li> -->
+				</ul>
+			</dd>
+	 	</dl>
+		</if>
+
+		<!-- <dl id="menu-picture">
+			<dt><i class="Hui-iconfont">&#xe613;</i> 图片管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Picture/picturelist')}" data-title="图片管理" href="javascript:void(0)">图片管理</a></li>
+				</ul>
+			</dd>
+		</dl> -->
+		<dl id="menu-act">
+			<dt><i class="Hui-iconfont">&#xe655;</i> 活动管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Activity/activitylist')}" data-title="球队活动列表" href="javascript:void(0)">球队活动列表</a></li>
+					<li><a _href="{:U('Activity/activityteamlist')}" data-title="赛事活动列表" href="javascript:void(0)">赛事活动列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-competition">
+			<dt><i class="Hui-iconfont">&#xe637;</i> 赛事管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Article/competitionlist')}" data-title="赛事列表" href="javascript:void(0)">赛事列表</a></li>
+					<li><a _href="{:U('Article/events')}" data-title="赛事动态" href="javascript:void(0)">赛事动态</a></li>
+					<if condition="session('admin_key_auth') eq 1">
+					<li><a _href="{:U('Article/adver')}" data-title="赛事幻灯片" href="javascript:void(0)">幻灯片</a></li>
+					</if>
+					<li><a _href="{:U('Order/competitionList')}" data-title="赛事订单" href="javascript:void(0)">赛事订单</a></li>
+				</ul>
+			</dd>
+		</dl>
+		</if>
+		<if condition="session('admin_key_auth') eq 1 or session('admin_key_auth') eq 3">
+		<dl id="menu-court">
+			<dt><i class="Hui-iconfont">&#xe643;</i> 球场管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Ballpark/ballparklist')}" data-title="球场列表" href="javascript:void(0)">球场列表</a></li>
+					<li><a _href="{:U('Ballpark/arenalist')}" data-title="球馆列表" href="javascript:void(0)">球馆列表</a></li>
+					<li><a _href="{:U('Ballpark/userList')}" data-title="用户列表" href="javascript:void(0)">用户列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-qualifying">
+			<dt><i class="Hui-iconfont">&#xe6cf;</i> 排位赛管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Qualifying/qualifyinglist')}" data-title="排位赛列表" href="javascript:void(0)">排位赛列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-order">
+			<dt><i class="Hui-iconfont">&#xe627;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Indent/orderlist',array('status'=>0))}" data-title="未处理订单" href="javascript:void(0)">未处理订单</a></li>
+					<li><a _href="{:U('Indent/orderlist',array('status'=>1))}" data-title="已处理订单" href="javascript:void(0)">已处理订单</a></li>
+					<li><a _href="{:U('Indent/tuiorderlist',array('status'=>2))}" data-title="申请退款订单" href="javascript:void(0)">申请退款订单</a></li>
+					<li><a _href="{:U('Indent/endtuiorderlist',array('status'=>3))}" data-title="已退款订单" href="javascript:void(0)">已退款订单</a></li>
+				</ul>
+			</dd>
+		</dl>
+			<if condition="session('admin_key_auth') eq 1">
+			<dl id="menu-shopping">
+				<dt><i class="Hui-iconfont">&#xe66a;</i> 商城管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+				<dd>
+					<ul>
+						<li><a _href="{:U('Mall/commodityList')}" data-title="商品列表" href="javascript:void(0)">商品列表</a></li>
+						<li><a _href="{:U('Mall/commodityBannerList')}" data-title="Banner管理" href="javascript:void(0)">Banner管理</a></li>
+						<li><a _href="{:U('Mall/commodityOrderList')}" data-title="订单管理" href="javascript:void(0)">订单管理</a></li>
+
+					</ul>
+				</dd>
+			</dl>
+			</if>
+		</if>
+		<if condition="session('admin_key_auth') eq 1">
+		<dl id="menu-ballteam">
+			<dt><i class="Hui-iconfont">&#xe62b;</i> 球队管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('ActivityTeam/Applyteamlist')}" data-title="球队申请列表" href="javascript:void(0)">球队申请列表</a></li>
+					<li><a _href="{:U('ActivityTeam/teamlist')}" data-title="球队列表" href="javascript:void(0)">球队列表</a></li>
+					<li><a _href="{:U('ActivityTeam/person_list')}" data-title="球员列表" href="javascript:void(0)">球员列表</a></li>
+					<li><a _href="{:U('ActivityTeam/emblemlist')}" data-title="队徽列表" href="javascript:void(0)">队徽列表</a></li>
+					<li><a _href="{:U('ActivityTeam/emblemCategory')}" data-title="队徽分类" href="javascript:void(0)">队徽分类</a></li>
+				</ul>
+			</dd>
+		</dl>
+		</if>
+		</if>
+		</if>
+		<if condition="session('admin_key_auth') eq 1">
+		<dl id="menu-feer">
+			<dt><i class="Hui-iconfont">&#xe60a;</i> 裁判管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Referee/refereegroup')}" data-title="裁判分组" href="javascript:void(0)">裁判分组</a></li>
+				</ul>
+			</dd>
+		</dl>
+		</if>
+		<if condition="session('admin_key_auth') eq 1">
+		<dl id="menu-admin">
+			<dt><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('Admin/adminlist')}" data-title="管理员列表" href="javascript:void(0)">管理员列表</a></li>
+				</ul>
+			</dd>
+		</dl>
+		</if>
+		<!--求卡管理开始-->
+		<if condition="session('admin_key_auth') eq 1 ">
+			<dl id="menu-system">
+				<dt><i class="Hui-iconfont">&#xe62e;</i> 球卡管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+				<dd>
+					<ul>
+						<li><a _href="{:U('Card/person_card')}" data-title="约人卡管理" href="javascript:void(0)">约人卡管理</a></li>
+						<li><a _href="{:U('Card/team_card')}" data-title="约球卡管理" href="javascript:void(0)">约球卡管理</a></li>
+					</ul>
+				</dd>
+			</dl>
+		</if>
+		<!--求卡管理结束-->
+
+		<if condition="session('admin_key_auth') eq 1 ">
+		<dl id="menu-system">
+			<dt><i class="Hui-iconfont">&#xe62e;</i> 系统管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="{:U('System/systembase')}" data-title="系统消息" href="javascript:void(0)">系统消息</a></li>
+					<li><a _href="{:U('System/imprintlist')}" data-title="版本说明" href="javascript:void(0)">版本说明</a></li>
+					<!--<li><a _href="{:U('System/promotedlist')}" data-title="晋级设置" href="javascript:void(0)">晋级设置</a></li>-->
+					<li><a _href="{:U('System/agreementlist')}" data-title="系统协议" href="javascript:void(0)">系统协议</a></li>
+				</ul>
+			</dd>
+		</dl>
+		</if>
+
+	</div>
+</aside>
+<div class="dislpayArrow"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+	<div id="Hui-tabNav" class="Hui-tabNav">
+		<div class="Hui-tabNav-wp">
+			<ul id="min_title_list" class="acrossTab cl">
+				<li class="active"><span title="我的桌面" data-href="__APP__/Admin/Index/welcome.html">我的桌面</span><em></em></li>
+			</ul>
+		</div>
+		<div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
+	</div>
+	<div id="iframe_box" class="Hui-article">
+		<div class="show_iframe">
+			<div style="display:none" class="loading"></div>
+			<iframe scrolling="yes" frameborder="0" src="welcome.html"></iframe>
+		</div>
+	</div>
+</section>
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> -->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> -->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> -->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> -->
+<script type="text/javascript">
+/*资讯-添加*/
+function article_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-添加*/
+function picture_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*产品-添加*/
+function product_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*用户-添加*/
+function member_add(title,url,w,h){
+	layer_show(title,url,w,h);
+}
+</script> 
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?080836300300be57b7f34f4b3e97d911";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s)})();
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F080836300300be57b7f34f4b3e97d911' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+body { background-color: #f3f3f4;}
+.header {
+    width: 100%;
+    text-align: center;
+    color: #595959;
+    font-size: 20px;
+    padding-top: 50px;
+    padding-bottom: 30px;
+    font-weight: bold;
+}
+.login-con {
+    width: 70%;
+    margin: 0 auto;
+}
+.login-con input {
+    width: 100%;
+    float: left;
+    margin-bottom: 15px;
+    border: 1px solid #dcdcdc;
+    height: 34px;
+    text-indent: 1em;
+    font-size: 14px;
+    font-family:'微软雅黑 Light','微软雅黑';
+}
+.btn-login {
+    width: 100%;
+    background-color: #18a689;
+    height: 34px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 34px;
+    color: #fff;
+    margin-top: 15px;
+}
+.login-time {
+    width: 100%;
+    text-align: center;
+    color: #595959;
+    font-size: 12px;
+    margin-top: 26px;
+}

@@ -1,0 +1,91 @@
+<include file="Public:header" />
+<script type="text/javascript" src="__PUBLIC__/Admin/lib/lightbox2/2.8.1/js/lightbox.js" async></script>
+
+<title>商品订单详情</title>
+
+
+<div class="pd-20">
+    <table class="table">
+        <tbody>
+        <tr>
+            <th class="text-r" width="85">ID：</th>
+            <td>{$data.id}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">订单号：</th>
+            <td>{$data.order_no}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">用户：</th>
+            <td>{$data.user.phone}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">商品ID：</th>
+            <td>{$data.commodity.id}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">商品名：</th>
+            <td>{$data.commodity.title}</td>
+        </tr>
+        <if condition="!empty($data['ball_team'])">
+            <tr>
+                <th class="text-r" width="85">球队ID：</th>
+                <td>{$data.ball_team_id}</td>
+            </tr>
+            <tr>
+                <th class="text-r" width="85">球队名：</th>
+                <td>{$data.ball_team.name}</td>
+            </tr>
+        </if>
+
+        <tr>
+            <th class="text-r" width="85">是否已发货：</th>
+            <td>
+                <switch name="data.status">
+                    <case value="0">否</case>
+                    <case value="1">是</case>
+                    <default/>出错了
+                </switch>
+            </td>
+        </tr>
+
+        <tr>
+            <th class="text-r" width="85">联系人：</th>
+            <td>{$data.consignee}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">手机号：</th>
+            <td>{$data.mobile}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">省份|城市：</th>
+            <td>{$data.province}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">详细地址：</th>
+            <td>{$data.address}</td>
+        </tr>
+
+        <tr>
+            <th class="text-r" width="85">物流号：</th>
+            <td>{$data.tracking_no}</td>
+        </tr>
+
+        <tr>
+            <th class="text-r" width="120">创建时间：</th>
+            <td>{$data.create_time|date="Y-m-d H:i:s",###}</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        lightbox.option({
+            fadeDuration:100,
+            resizeDuration:300
+        });
+    })
+</script>
+
+

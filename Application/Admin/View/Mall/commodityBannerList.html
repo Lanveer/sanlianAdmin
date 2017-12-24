@@ -1,0 +1,392 @@
+<include file="Public:header" />
+<script type="text/javascript" src="__PUBLIC__/Admin/lib/lightbox2/2.8.1/js/lightbox.js" async></script>
+<body class="pos-r">
+
+<div style="margin-left:0px;">
+    <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 商城管理 <span class="c-gray en">&gt;</span> Banner管理 <span class="c-gray en">&gt;</span>
+
+
+        <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+    <div class="pd-20">
+
+        <div class="text-c"> 创建日期范围：
+            <literal>
+                <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
+                -
+                <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;">
+            </literal>
+            <span class="pipe">|</span>
+        <span class="select-box" style="width: 120px">
+            <select id="option" class="select" size="1" name="option">
+                <option value="0" selected>ID</option>
+                <option value="1" >商品名称</option>
+            </select>
+        </span>
+            <input type="text" class="input-text" style="width:250px" placeholder="" id="searchText" name="">
+            <button type="button" class="btn btn-success radius" onclick="search()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+        </div>
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="r">
+                <a href="javascript:;" onclick="add_commodity()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加Banner</a>
+            </span>
+        </div>
+
+        <div class="mt-20">
+            <table class="table table-border table-bordered table-bg table-hover table-sort">
+                <thead>
+                <tr class="text-c">
+                    <th width="30">ID</th>
+                    <th width="80">图片</th>
+                    <th width="50">链接地址</th>
+                    <th width="100">商品</th>
+                    <th width="100">富文本</th>
+                    <th width="40">类型</th>
+                    <th width="40">状态</th>
+                    <th width="60">创建时间</th>
+                    <th width="40">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script>
+
+<script type="text/javascript">
+    var tableOption={
+        "autoWidth":false,
+        "processing":true,
+        "serverSide":true,
+        "searching": false,
+        "order": [[ 0, "desc" ]],//默认第几个排序
+        "ordering": true,
+        "bStateSave": true,//状态保存
+        "columnDefs": [
+            {"orderable":false,"aTargets":[1,2,3,4,8]}// 制定列不参与排序
+        ],
+        "ajax":{
+            "url":"__URL__/getCommodityBannerList",
+            "type":"POST",
+            "data": function (d) {
+                var data = {};
+                var column = d['order'][0]['column'];
+                var datemin = $("#datemin").val();
+                var datemax = $("#datemax").val();
+                var search = $("#searchText").val();
+                var option = $("#option option:selected").val();
+                datemax = datemax?datemax+" 24:00:00":"";
+                data = {
+                    draw:d['draw'],
+                    offset:d['start'],
+                    limit:d['length'],
+                    order:d['order'][0]['dir'],
+                    sort:d['columns'][column]['data'],
+                    start_time:datemin,
+                    end_time:datemax,
+                    option:option,
+                    search:search
+                };
+                return data;
+            }
+        },
+        "columns":[
+            {"data":"id"},
+            {
+                "data":"img",
+                "render": function (data,type,full) {
+                    if(!data){
+                        return "";
+                    }
+                    var imgElem = '<a href="'+data+'" data-lightbox="'+full.id+'"><img height="45" class="picture-thumb" src="' +
+                            data + '"></a>';
+                    return imgElem;
+                }
+            },
+            {
+                "data":"url",
+                "render": function (data, type, full) {
+                    var elem = "<a target='_blank' href='"+data+"'>"+data+"</a>";
+                    return elem;
+                }
+            },
+            {
+                "data":"commodity_id",
+                "render": function (data, type, full) {
+                    var elem = "";
+                    if(typeof(full['commodity'])!=='undefined'){
+                        elem = full['commodity']['title'];
+                    }
+                    return elem;
+                }
+            },
+            {"data":"html"},
+            {
+                "data":"type",
+                "render": function (data, type, full) {
+                    var elem = "";
+                    var status = data|0;
+                    switch (status){
+                        case 0:
+                            elem = "链接";
+                            break;
+                        case 1:
+                            elem = "商品";
+                            break;
+                        case 2:
+                            elem = "富文本";
+                            break;
+                    }
+                    return elem;
+                }
+            },
+            {
+                "data":"status",
+                "render": function (data, type, full) {
+                    var elem = "";
+                    var status = data|0;
+                    switch (status){
+                        case 0:
+                            elem = "已下架";
+                            break;
+                        case 1:
+                            elem = "已上架";
+                            break;
+                    }
+
+                    return elem;
+                }
+            },
+            {
+                "data":"create_time",
+                "render": function (data, type, full) {
+                    var time = moment.unix(data).format("YYYY-MM-DD HH:mm:ss");
+                    return time;
+                }
+            },
+			{
+				"data":null,
+				"defaultContent":"",
+				"createdCell": function (cell, cellData, rowData, rowIndex, colIndex) {
+					$(cell).addClass('td-manage f-14');
+				},
+				"render": function (data, type, full) {
+					var elem = getManageEle(full.id,full);
+					return elem;
+				}
+			}
+        ],
+        "createdRow": function (row,data,dataIndex) {
+            $(row).addClass('text-c');
+        }
+    };
+</script>
+
+
+
+
+
+<script type="text/javascript">
+    /*
+     *   获取操作列的DOM
+     * */
+    function getManageEle(id,full){
+        var type = full.type;
+        var elem ="";
+        var set_refund_elem = '<a style="text-decoration:none" onClick="setOrderRefundStatus(\'设置退款类型\','+id+')" href="javascript:void(0);" title="设置退款类型">设置退款类型</a>';
+        var check_elem = '<a title="查看" href="javascript:void(0);" onclick="order_check(\'查看商品详情\','+id+')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe695;</i></a> ';
+        var del_elem = '<a title="删除" href="javascript:void(0);" onclick="product_del(this,'+id+')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+        var edit_elem = '<a title="编辑" href="javascript:void(0);" onclick="member_edit('+id+')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> ';
+
+
+        elem=edit_elem+del_elem;
+
+
+        return elem;
+    }
+    /*
+     *   搜索
+     * */
+    function search(){
+        table.ajax.reload()
+    }
+
+    $(function () {
+        lightbox.option({
+            fadeDuration:100,
+            resizeDuration:300
+        });
+        window.table = $('table.table-sort').DataTable(tableOption);
+    });
+
+    function add_commodity(){
+        var url = "__URL__/addBanner";
+        var title="新增Banner";
+        layer_show(title,url,500,520);
+    }
+
+    function member_edit(id){
+        var url = "__URL__/editCommodityBanner/id/"+id;
+        layer_show("修改商品",url,550,400);
+    }
+
+
+    /*图片-添加*/
+    function order_check(title,id){
+        var url = "__URL__/commodityInfo/id/"+id;
+        layer_show(title,url,500,520);
+    }
+    function admin_edit(title,url,id,w,h){
+        layer_show(title,url,w,h);
+    }
+    /*图片-查看*/
+    function product_show(title,url,id){
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url
+        });
+        layer.full(index);
+    }
+    /*图片-审核*/
+    function product_shenhe(obj,id){
+        layer.confirm('审核文章？', {
+                    btn: ['通过','不通过'],
+                    shade: false
+                },
+                function(){
+                    $(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="product_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+                    $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+                    $(obj).remove();
+                    layer.msg('已发布', {icon:6,time:1000});
+                },
+                function(){
+                    $(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="product_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+                    $(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
+                    $(obj).remove();
+                    layer.msg('未通过', {icon:5,time:1000});
+                });
+    }
+    /*图片-下架*/
+    function product_stop(obj,id){
+        layer.confirm('确认要下架吗？',function(index){
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="product_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+            $(obj).remove();
+            layer.msg('已下架!',{icon: 5,time:1000});
+        });
+    }
+
+    /*图片-发布*/
+    function product_start(obj,id){
+        layer.confirm('确认要发布吗？',function(index){
+            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="product_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+            $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+            $(obj).remove();
+            layer.msg('已发布!',{icon: 6,time:1000});
+        });
+    }
+    /*图片-申请上线*/
+    function product_shenqing(obj,id){
+        $(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
+        $(obj).parents("tr").find(".td-manage").html("");
+        layer.msg('已提交申请，耐心等待审核!', {icon: 1,time:2000});
+    }
+    /*图片-编辑*/
+    function product_edit(title,url,id){
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url
+        });
+        layer.full(index);
+    }
+    /*图片-删除*/
+    function product_del(obj,id){
+        layer.confirm('确认要删除吗？（最好别删除）',function(index){
+            $.ajax({
+                type:'post',
+                url:"{:U('Mall/delBanner')}",
+                dataType:'json',
+                data:{'id':id},
+                success:function(Msg){
+                    if(Msg){
+                        search();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    }
+                }
+            });
+
+        });
+    }
+
+    function setOrderRefundStatus(obj,id){
+        layer.confirm('设置退款类型', {
+                    btn: ['可退款','不可退款','已使用'],
+                    shade: false,
+                    closeBtn: 1,
+                    btn2:function(){
+                        var data = {
+                            "order_id":id,
+                            "refund_type":4
+                        };
+                        $.post("__URL__/setRefundType",data)
+                                .success(function (data) {
+                                    layer.msg('已设置为不可退款！', {icon:6,time:1000});
+                                    $(obj).parents("tr").find(".td-refund").html('<span class="label label-primary radius">不可申请退款</span>');
+                                })
+                                .error(function (data) {
+                                    layer.msg(data.responseText,{icon: 5,time:1000});
+                                })
+                                .always(function () {
+                                    search();
+                                });
+                    },
+                    btn3:function(){
+                        var data = {
+                            "order_id":id,
+                            "refund_type":5
+                        };
+                        $.post("__URL__/setRefundType",data)
+                                .success(function (data) {
+                                    layer.msg('已设置为已使用！', {icon:6,time:1000});
+                                    $(obj).parents("tr").find(".td-refund").html('<span class="label label-success radius">已使用</span>');
+                                })
+                                .error(function (data) {
+                                    layer.msg(data.responseText,{icon: 5,time:1000});
+                                })
+                                .always(function () {
+                                    search();
+                                });
+                    },
+                    cancel: function () {
+
+                    }
+                },
+                function(){
+                    var data = {
+                        "order_id":id,
+                        "refund_type":3
+                    };
+                    $.post("__URL__/setRefundType",data)
+                            .success(function (data) {
+                                layer.msg('已设置为可退款！', {icon:6,time:1000});
+                                $(obj).parents("tr").find(".td-refund").html('<span class="label label-default radius">可申请退款</span>');
+                            })
+                            .error(function (data) {
+                                layer.msg(data.responseText,{icon: 5,time:1000});
+                            })
+                            .always(function () {
+                                search();
+                            });
+                });
+    }
+</script>
+</body>
+</html>

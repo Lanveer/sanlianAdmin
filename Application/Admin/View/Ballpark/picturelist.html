@@ -1,0 +1,66 @@
+
+<include file="Public:header" />
+
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 图片管理 <span class="c-gray en">&gt;</span> 图片展示 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;" onclick="admin_add('添加照片','{:U('Ballpark/pic_add',array('court_id'=>$court_id))}','600','500')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加照片</a> <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> </span> <span class="r">共有数据：<strong>{$countUrl?$countUrl:'0'}</strong> 条</span> </div>
+	<div class="portfolio-content">
+		<ul class="cl portfolio-area">
+			<foreach name="urlArr" item="val">
+			<li class="item">
+				<div class="portfoliobox">
+					<input class="checkbox" name="checkpic" type="checkbox" value="{$val}">
+					<div class="picbox"><a href="javascript:;" data-lightbox="gallery" data-title="照片{++$key}"><img src="{$val}"></a></div>
+					<div class="textbox">照片{$key} </div>
+				</div>
+			</li>
+			</foreach>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/lightbox2/2.8.1/js/lightbox-plus-jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+	var court_id="{$court_id}";
+	function datadel(){
+		var chk_value =[];
+		var notCheck_value=[];
+		$('input[name="checkpic"]:checked').each(function(){
+			chk_value.push($(this).val());
+		});
+
+		if(chk_value.length==0){
+			layer.msg('你还没有选择任何内容...',{icon:2,time:2000});
+		}else{
+			var unCheckedBoxs = $("input[name='checkpic']").not("input:checked").each(function(){
+				notCheck_value.push($(this).val());
+				$.ajax({
+					type:'post',
+					url:"{:U('Ballpark/pic_del')}",
+					dataType:'json',
+					data:{'court_id':court_id,'urljsonArr':notCheck_value},
+					success:function(Msg){
+						console.info(Msg);
+						if(Msg){
+							layer.msg('删除成功...',{icon:1,time:2000});
+							setTimeout("window.location.reload()",2000);
+						}
+					}
+				});
+			});
+		}
+	}
+	function admin_add(title,url,w,h){
+		layer_show(title,url,w,h);
+	}
+$(function(){
+	$.Huihover(".portfolio-area li");
+});
+
+</script>
+</body>
+</html>

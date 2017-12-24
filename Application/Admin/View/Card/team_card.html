@@ -1,0 +1,158 @@
+
+<include file="Public:header" />
+
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i>
+	首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt</span> 管理员列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"> <a href="javascript:;" onclick="" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 发布球队球卡</a></span> <span class="r">共有数据：<strong>{$countTeamList}</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg table-sort">
+		<thead>
+		<tr>
+			<th scope="col" colspan="10">球队球卡列表</th>
+		</tr>
+		<tr class="text-c">
+			<th width="100	">编号</th>
+			<th width="150">标题</th>
+			<th width="150">地址</th>
+			<th width="90">球队费用</th>
+			<th width="150">赛制</th>
+			<th>状态</th>
+			<th>人数限制</th>
+			<th width="130">发布时间</th>
+			<th width="130">比赛时间</th>
+			<th>球队名字</th>
+			<th>是否取消</th>
+			<!--<th>剩余卡片</th>-->
+			<th width="100">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		<foreach name="teamList" item="val">
+			<tr class="text-c">
+				<td>{++$key}</td>
+				<td>{$val.title}</td>
+				<td>{$val.address}</td>
+				<td>{$val.team_fee}</td>
+
+				<if condition="$val.race_type eq 1">
+					<td>五人制</td>
+					<elseif condition="$val.race_type eq 2" />
+					<td>七人制</td>
+					<else />
+					<td>九人制</td>
+				</if>
+				<if condition="$val.status eq 0">
+					<td>未领取</td>
+					<elseif condition="$val.status eq 1" />
+					<td>已领取</td>
+				</if>
+
+				<td>{$val.limit}</td>
+				<td>{$val.create_time}</td>
+				<td>{$val.start_time}</td>
+				<td>{$val.team_name}</td>
+				<if condition="$val.is_cancel eq 0">
+					<td>否</td>
+					<elseif condition="$val.is_cancel eq 1" />
+					<td>是</td>
+				</if>
+				<!--<td>{$val.rest_card}</td>-->
+				<td class="td-manage">
+					<if condition="$val.is_cancel eq 0">
+					<a title="取消" href="javascript:;" onclick="person_cancel(this,'{$val.id}')" class="ml-5 cancel" style="text-decoration:none"><i class="Hui-iconfont" style="color:green;">&#xe6e4;</i></a>
+					<elseif condition="$val.is_cancel eq 1"  />
+					<a title="打开" href="javascript:;" onclick="person_open(this,'{$val.id}')" class="ml-5 open" style="text-decoration:none"><i class="Hui-iconfont" style="color: red">&#xe601;</i></a>
+					</if>
+					<a title="删除" href="javascript:;" onclick="person_del(this,'{$val.id}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+				</td>
+			</tr>
+		</foreach>
+
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/	jquery.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+	/*取消卡片*/
+	 function person_cancel(obj,id) {
+//	     console.log($(obj).parents().find('.td-manage').html())
+	     layer.confirm('确定要取消嘛？',function (index) {
+			 $.ajax({
+				 url:"{:U('Card/person_cancel')}",
+				 dataType:'json',
+				 type:'post',
+				 data:{id:id},
+				 success:function (Msg) {
+                     console.log(Msg)
+					 if(Msg){
+					     //成功
+						 $(obj).parents().find('.td-manage').prepend('<a title="打开" href="javascript:;" onclick="person_open(this,id)" class="ml-5 open" style="text-decoration:none"><i class="Hui-iconfont" style="color: red">&#xe601;</i></a>')
+						 $(obj).remove();
+                         layer.msg('取消成功!',{icon: 6,time:1000});
+                         window.location.reload();
+					 }else{
+					     //失败
+                         layer.msg('取消失败！请重试....',{icon:5,time:1000});
+					 }
+                 }
+			 })
+         })
+     }
+     /*启用卡片*/
+     function person_open(obj,id) {
+//         console.log($(obj).parents().find
+// ('.td-manage').html())
+		 layer.confirm('确定要开启吗？',function (index) {
+             $.ajax({
+                 url:"{:U('Card/person_open')}",
+                 dataType:'json',
+                 type:'post',
+                 data:{id:id},
+                 success:function (Msg) {
+                     if(Msg){
+                         //成功
+                         console.log($(obj).parents().html());
+                         $(obj).parents().find('.td-manage').prepend('<a title="取消" href="javascript:;" onclick="person_cancel(this,id)" class="ml-5 cancel" style="text-decoration:none"><i class="Hui-iconfont" style="color:green;">&#xe6e4;</i></a>')
+                         $(obj).remove();
+						 layer.msg('启用成功!',{icon:6,time:1000});
+                         window.location.reload();
+                     }else{
+                         //失败
+                         layer.msg('启用失败！请重试....',{icon:5,time:1000});
+                     }
+                 }
+             })
+         })
+     }
+
+    //     删除卡片
+    function person_del(obj,id) {
+        layer.confirm('确定要删除吗？',function (index) {
+            $.ajax({
+                url:"{:U('Card/person_del')}",
+                dataType:'json',
+                type:"post",
+                data:{id:id},
+                success:function(msg){
+                    console.log(msg);
+                    if(msg){
+                        $(obj).parents('tr').remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    }else{
+                        layer.msg('操作失败！请重试....',{icon: 6,time:1000});
+                    }
+                }
+            })
+        })
+    }
+</script>
+</body>
+</html>

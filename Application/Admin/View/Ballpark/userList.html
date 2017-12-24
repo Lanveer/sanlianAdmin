@@ -1,0 +1,265 @@
+
+<include file="Public:header" />
+<link href="__PUBLIC__/Admin/lib/lightbox2/2.8.1/css/lightbox.css" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="__PUBLIC__/Admin/lib/lightbox2/2.8.1/js/lightbox.js" async></script>
+
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 球队管理 <span class="c-gray en">&gt;</span> 球员列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+
+	<div class="text-c"> 申请日期范围：
+		<literal>
+			<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
+			-
+			<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;">
+		</literal>
+		<span class="pipe">|</span>
+        <span class="select-box" style="width: 120px">
+            <select id="option" class="select" size="1" name="option">
+				<option value="0" selected>ID</option>
+				<option value="1" >昵称</option>
+				<option value="2" >手机号</option>
+				<option value="3">VIP等级</option>
+			</select>
+        </span>
+		<input type="text" class="input-text" style="width:250px" placeholder="" id="searchText" name="">
+		<button type="button" class="btn btn-success radius" onclick="search()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+	</div>
+	
+	<!--<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">  <a class="btn btn-primary radius" onclick="product_add('添加球员','{:U('ActivityTeam/addperson')}','800','700')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加球员</a>  <a class="btn btn-primary radius" href="{:U('Exportexcel/getUserExcel')}"><i class="Hui-iconfont">&#xe644;</i> 导出信息</a></span>  </div>-->
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="70">球员编号</th>
+					<th width="80">球员昵称</th>
+					<th width="200">头像</th>
+					<th width="80">三联币</th>
+					<th width="120">联系电话</th>
+					<th width="120">备注</th>
+					<th width="70">性别</th>
+					<th width="10">VIP等级</th>
+					<th width="120">申请时间</th>
+					<!--<th width="100">操作</th>-->
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
+</div>
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script>-->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>-->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/My97DatePicker/WdatePicker.js"></script> -->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> -->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script> -->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> -->
+<!--<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> -->
+<script type="text/javascript">
+	var tableOption={
+		"autoWidth":false,
+		"processing":true,
+		"serverSide":true,
+		"searching": false,
+		"order": [[ 0, "desc" ]],//默认第几个排序
+		"ordering": true,
+		"bStateSave": true,//状态保存
+		"columnDefs": [
+			{"orderable":false,"aTargets":[2]}// 制定列不参与排序
+		],
+		"ajax":{
+			"url":"__URL__/getUserList",
+			"type":"POST",
+			"data": function (d) {
+				var data = {};
+				var column = d['order'][0]['column'];
+				var datemin = $("#datemin").val();
+				var datemax = $("#datemax").val();
+				var search = $("#searchText").val();
+				var option = $("#option option:selected").val();
+				datemax = datemax?datemax+" 24:00:00":"";
+				data = {
+					draw:d['draw'],
+					offset:d['start'],
+					limit:d['length'],
+					order:d['order'][0]['dir'],
+					sort:d['columns'][column]['data'],
+					start_time:datemin,
+					end_time:datemax,
+					option:option,
+					search:search
+				};
+				return data;
+			}
+		},
+		"columns":[
+			{"data":"user_id"},
+			{"data":"nickname"},
+			{
+				"data":"avatar",
+				"render": function (data,type,full) {
+					if(!data){
+						return "";
+					}
+					var imgElem = '<a href="'+data+'" data-lightbox="'+full.user_id+'"><img height="45" class="picture-thumb" src="' +
+							data + '"></a>';
+					return imgElem;
+				}
+			},
+			{
+				"data":"san_money",
+				"render": function (data, type, full) {
+					var url = "__MODULE__/ActivityTeam/sanlianMoney_edit?user_id="+full.user_id;
+					var elem = data
+					return elem;
+				}
+			},
+			{"data":"phone"},
+			{
+				"data":"remark",
+				"render": function (data, type, full) {
+					data = data?data:'--';
+					var url = "__MODULE__/ActivityTeam/remark_edit?user_id="+full.user_id;
+					var elem = data
+					return elem;
+				}
+			},
+			{
+				"data":"sex",
+				"render": function (data, type, full) {
+					data |= 0;
+					var elem = "";
+					switch (data){
+						case 0:
+							elem = "保密";
+							break;
+						case 1:
+							elem = "男";
+							break;
+						case 2:
+							elem = "女";
+							break;
+						default:
+							elem = "<font color='red'>出错了</font>";
+							break;
+					}
+
+					return elem;
+				}
+			},
+			{"data":"vip_id"},
+			{
+				"data":"create_time",
+				"render": function (data, type, full) {
+					var time = moment.unix(data).format("YYYY-MM-DD H:m:s");
+					return time;
+				}
+			},
+//			{
+//				"data":null,
+//				"defaultContent":"",
+//				"createdCell": function (cell, cellData, rowData, rowIndex, colIndex) {
+//					$(cell).addClass('td-manage f-14');
+//				},
+//				"render": function (data, type, full) {
+//					var elem = getManageEle(full.order_id,full);
+//					return elem;
+//				}
+//			}
+		],
+		"createdRow": function (row,data,dataIndex) {
+			$(row).addClass('text-c');
+		}
+	};
+
+	$(function () {
+		window.table = $('table.table-sort').DataTable(tableOption);
+		lightbox.option({
+			fadeDuration:100,
+			resizeDuration:300
+		});
+	});
+
+
+</script>
+<script>
+
+	/*
+	 *   获取操作列的DOM
+	 * */
+	function getManageEle(id,full){
+		var status = full.status|0;
+		var is_auth = full.is_auth|0;
+		var elem ="";
+		var send_msg = '<a style="text-decoration:none" onClick="person_add(\'发送消息\',\'__MODULE__/ActivityTeam/message?deviceuuid='+full.deviceuuid+'&user_id='+full.user_id+'\')" href="javascript:;" title="发送消息"><i class="Hui-iconfont">&#xe68a;</i></a>';
+		var del_elem = '<a style="text-decoration:none" class="ml-5" onClick="product_del(this,'+full.user_id+')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>';
+		var money_elem = '<a style="text-decoration:none" class="mr-5" onClick="money_record(this,'+full.user_id+')" href="javascript:;" title="钱包记录"><i class="Hui-iconfont">&#xe63a;</i></a></td>';
+
+		elem+=(money_elem+send_msg+del_elem);
+		return elem;
+	}
+
+	function person_add(title,url,w,h){
+		layer_show(title,url,w,h);
+	}
+
+	/*用户钱包记录*/
+	function money_record(obj,user_id){
+		var url = "__URL__/money_record/user_id/" + user_id;
+		layer_show("用户钱包记录",url,600,500);
+	}
+
+	/*图片-添加*/
+	function product_add(title,url,w,h){
+
+		layer_show(title,url,w,h);
+	}
+	/*图片-查看*/
+	function product_show(title,url,id){
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url
+		});
+		layer.full(index);
+	}
+
+	/*图片-编辑*/
+	function product_edit(title,url,id){
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url
+		});
+		layer.full(index);
+	}
+	/*图片-删除*/
+	function product_del(obj,id){
+		layer.confirm('确认要删除吗？',function(index){
+			$.ajax({
+				url:"{:U('ActivityTeam/person_del')}",
+				type:'post',
+				dataType:'json',
+				data:{'id':id},
+				success:function(Msg){
+					if(Msg){
+						$(obj).parents("tr").remove();
+						layer.msg('已删除!',{icon:1,time:1000});
+					}else{
+						layer.msg('删除失败!',{icon:2,time:1000});
+					}
+				}
+			});
+		});
+	}
+
+	/*
+	 *   搜索
+	 * */
+	function search(){
+		table.ajax.reload()
+	}
+</script>
+</body>
+</html>

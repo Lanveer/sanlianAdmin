@@ -1,0 +1,141 @@
+<include file="Public:header" />
+<style>
+	.calad{
+		line-height: 20px !important;
+	}
+</style>
+<div class="orderlist-con">
+    <div class="orderlist-con-title">球场价格</div>
+    <ul class="balllist-con-blod changcilist-con">
+        <li>开始时间</li>
+        <li>结束时间</li>
+		<li>关闭</li>
+		<li>价格</li>
+		<li>操作</li>
+        <div class="clear"></div>
+    </ul>
+    
+    <foreach name="onceMsg" item="val">
+    <ul class="changcilist-con" style="background-color:{$key%2==0?'':'#dddddd'}">
+        <li>{$val.start_time}</li>
+        <li>{$val.end_time}</li>
+		<li class="calad">
+			<a style="text-decoration:none" href="javascript:;" title="查看关闭段"><input type="text" id="calendar{$val.once_id}"  onclick="getOnce_id({$val['once_id']})" name="calerdate" class="input-text" value="{$val.datestr}" /></a>
+		</li>
+        <li class="li-changeprice"><a style="text-decoration:none" onClick="product_edit(this,'{$val.once_id}')" href="javascript:;" title="编辑价格">{$val.price}</a></li>
+
+		<li class="td-manage">
+		<if condition="$val['is_open'] eq 1">
+        	<a style="text-decoration:none" onClick="product_stop(this,'{$val.once_id}')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
+        <else />
+        	<a style="text-decoration:none" onClick="product_start(this,'{$val.once_id}')" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>
+        </if>
+		</li>
+        <div class="clear"></div>
+    </ul>
+    </foreach>
+    
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/extend/layer.ext.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/calendar.js"></script>
+<script type="text/javascript">
+
+	function getOnce_id(once_id){
+		//$("input[name='once_id']").val(once_id);
+		var isClicked = $('#calendar'+once_id).attr('init');
+		if(isClicked){
+			return 0;
+		}
+		$('#calendar'+once_id).attr('init',1);
+		var calendar = new Calendar();
+		calendar.init({
+			target: $('#calendar'+once_id),
+//			width:$(this).innerWidth(),
+			//range: ['2015-3-5', '2015-3-25'],
+			multiple: true,
+			maxdays:9999,
+			url:"{:U('Index/breakpoint')}",
+			emptyUrl:"{:U('Index/emptytimes')}",
+			once_id:once_id,//自定义参数
+			overdays: function(a) {
+				layer.msg('添加已达上限 '+ a + ' 天',{icon:2,time:2000});
+			},
+			selected:function(a,b){
+				//console.info(a);
+				//console.info(b);
+			}
+		});
+		$(".calendar").Calendar({toolbar:true,zIndex:999});
+	}
+function product_stop(obj,id){
+	layer.confirm('确认需要下架吗?..',function(index){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/once_stop')}",
+			dataType:'json',
+			data:{'once_id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("ul").find(".td-manage").prepend("<a style='text-decoration:none' onClick='product_start(this,"+id+")' href='javascript:;' title='发布'><i class='Hui-iconfont'>&#xe603;</i></a>");
+					$(obj).remove();
+					layer.msg('已成功下架',{icon:1,time:2000});
+				}else{
+					layer.msg('操作失败...',{icon:2,time:2000});
+				}
+			}
+		});		
+	});
+}
+function product_start(obj,id){
+	layer.confirm('确认要上架吗?..',function(index){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/once_start')}",
+			dataType:'json',
+			data:{'once_id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("ul").find(".td-manage").prepend("<a style='text-decoration:none' onClick='product_stop(this,"+id+")' href='javascript:;' title='下架'><i class='Hui-iconfont'>&#xe6de;</i></a>");
+					$(obj).remove();
+					layer.msg('已成功上架',{icon:1,time:2000});
+				}else{
+					layer.msg('操作失败...',{icon:2,time:2000});
+				}
+			}
+		});		
+	});
+}
+
+function product_edit(obj,id){	
+	layer.prompt({
+		  title: '请输入价格，并确认',
+		  formType: 0 //prompt风格，支持0-2
+		}, function(price,index){
+			$.ajax({
+				type:'post',
+				url:"{:U('Index/changeCourtPrice')}",
+				dataType:'json',
+				data:{'once_id':id,'price':price},
+				success:function(Msg){
+					if(Msg){
+						$(obj).parents('ul').find('.li-changeprice').prepend("<a style='text-decoration:none' onClick='product_edit(this,"+id+")' href='javascript:;' title='编辑价格'>"+price+".00"+"</a>");
+						$(obj).remove();
+						layer.close(index);
+						layer.msg('已成功修改',{icon:1,time:2000});
+					}else{
+						layer.msg('修改失败...',{icon:2,time:2000});
+					}
+				}
+			});		  
+		});
+}
+
+</script>
+</body>
+</html>

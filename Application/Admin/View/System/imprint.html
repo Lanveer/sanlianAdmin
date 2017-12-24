@@ -1,0 +1,90 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+	<form action="{:U('System/addimprint')}" method="post" enctype="multipart/form-data" class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>版本号：</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" required value="" placeholder="" id="" name="version">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>版本名称：</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" required value="" placeholder="" id="title" name="title">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>更新文件：</label>
+			<span class="btn-upload form-group">
+			  <input  class="input-text upload-url radius" type="text" name=""  readonly><a href="javascript:void(0);" class="btn btn-primary radius"><i class="Hui-iconfont">&#xf0020;</i> 浏览文件</a>
+			  <input type="file" multiple name="file" class="input-file">
+			</span>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>强制更新：</label>
+			  <div class="radio-box">
+			    <input type="radio" id="radio-1" value="1" name="is_force" />
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box">
+			    <input type="radio" id="radio-2" value="0" name="is_force" checked />
+			    <label for="radio-2">否</label>
+			  </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2"><span class="c-red">*</span>更新系统：</label>
+			  <div class="radio-box">
+			    <input type="radio" id="radio-3" value="1" name="type">
+			    <label for="radio-3">安卓</label>
+			  </div>
+			  <div class="radio-box">
+			    <input type="radio" id="radio-4" value="2" name="type" checked>
+			    <label for="radio-4">IOS</label>
+			  </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-2">更新说明：</label>
+			<div class="formControls col-5"> 
+				<script id="editor" type="text/plain" name="content" style="width:100%;height:400px;"></script> 
+			</div>
+		</div>
+				
+		<div class="row cl">
+			<div class="col-10 col-offset-2">
+				<button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交</button>
+				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+$(function(){
+	if($('#close').html()==1){
+		layer.msg('添加成功！',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}
+});
+$(function(){
+	var ue = UE.getEditor('editor');
+//	console.info(ue);
+});
+</script>
+</body>
+</html>

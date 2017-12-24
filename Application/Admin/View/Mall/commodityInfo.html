@@ -1,0 +1,91 @@
+<include file="Public:header" />
+<script type="text/javascript" src="__PUBLIC__/Admin/lib/lightbox2/2.8.1/js/lightbox.js" async></script>
+
+<title>商品详情</title>
+
+
+<div class="pd-20">
+    <table class="table">
+        <tbody>
+        <tr>
+            <th class="text-r" width="85">ID：</th>
+            <td>{$commodity.id}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">商品名称：</th>
+            <td>{$commodity.title}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">兑换热点数：</th>
+            <td>{$commodity.hot_point}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">参考价：</th>
+            <td>￥{$commodity.reference_price}</td>
+        </tr>
+        <tr>
+            <th class="text-r">Banner：</th>
+            <td>
+                <a href="{$commodity.banner}" data-lightbox="'+full.title+'"><img height="50" class="picture-thumb" src="{$commodity.banner}"></a>
+            </td>
+        </tr>
+        <tr>
+            <th class="text-r">图片：</th>
+            <td>
+                <foreach name="commodity.img" item="img">
+                    <a href="{$img}" data-lightbox="img" style="margin-right: 5px;"><img height="50" class="picture-thumb" src="{$img}"></a>
+                </foreach>
+            </td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">类型：</th>
+            <td>
+                <switch name="commodity.type">
+                    <case value="0">个人</case>
+                    <case value="1">球队</case>
+                    <default/>出错了
+                </switch>
+            </td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">是否需要发货：</th>
+            <td>
+                <switch name="commodity.is_deliver">
+                    <case value="0">否</case>
+                    <case value="1">是</case>
+                    <default/>出错了
+                </switch>
+            </td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">描述：</th>
+            <td>{$commodity.description}</td>
+        </tr>
+        <tr>
+            <th class="text-r" width="85">库存数量：</th>
+            <td>
+                <if condition="$commodity['number'] eq -1">
+                    无限
+                    <else/>
+                    {$commodity.number}
+                </if>
+            </td>
+        </tr>
+        <tr>
+            <th class="text-r" width="120">创建时间：</th>
+            <td>{$commodity.create_time|date="Y-m-d H:i:s",###}</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        lightbox.option({
+            fadeDuration:100,
+            resizeDuration:300
+        });
+    })
+</script>
+
+

@@ -1,0 +1,121 @@
+<include file="Public:header" />
+<div class="orderlist-con">
+    <div class="orderlist-con-title">球馆列表</div>
+    <!-- <ul class="qclist-con balllist-con-blod">
+        <li>场馆名称</li>
+        <li>联系电话</li>
+        
+        <div class="clear"></div>
+    </ul> -->
+    <ul class="balllist-con balllist-con-blod">
+        <li>场馆名称</li>
+        <li>联系电话</li>
+        <li>操 作</li>
+        <div class="clear"></div>
+    </ul>
+    <foreach name="venueMsg" item="val">
+    <ul class="qclist-con" style="background-color:{$key%2==0?'':'#dddddd'}">
+        <li><a href="{:U('Index/courtlist',array('venue_id'=>$val['venue_id']))}">{$val.name}</a></li>
+        <li>{$val.phone}</li>
+        <li class="td-manage" style="width: 20%;">
+        <if condition="$val['is_freeze'] eq 0">
+        	<a style="text-decoration:none" onClick="product_stop(this,'{$val.venue_id}')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
+        <else />
+        	<a style="text-decoration:none" onClick="product_start(this,'{$val.venue_id}')" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>
+        </if>
+        </li>
+        <div class="clear"></div>
+    </ul>
+    </foreach>
+    
+    
+</div>
+<div class="load-more">加载更多内容</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+var pageNum=15;
+var page=1;
+$('.load-more').click(function(){
+	var index=layer.load(2);
+	$.ajax({
+		type:'post',
+		url:"{:U('Index/getVenueMore')}",
+		dataType:'json',
+		data:{'pageNum':pageNum,'page':++page},
+		success:function(data){
+			if(data==''){
+				layer.msg('数据加载完毕..',{icon:2,time:2000});
+				layer.close(index);
+			}else{
+				var item="";
+				$.each(data,function(i,result){
+					if(i%2==0){
+						item+="<ul class='qclist-con' style='background-color:#dddddd'>";
+					}else{
+						item+="<ul class='qclist-con'>";
+					}
+					
+					item+="<li><a href='__APP__/Mobile/Index/courtlist/venue_id/"+result['venue_id']+"'>"+result['name']+"</a></li>";
+					item+="<li>"+result['phone']+"</li>";
+					item+="<li class='td-manage' style='width: 20%;'>";
+					if(result['is_freeze']==0){
+						item+="<a style='text-decoration:none' onClick='product_stop(this,"+result['venue_id']+")' href='javascript:;' title='下架'><i class='Hui-iconfont'>&#xe6de;</i></a>";
+					}else{
+						item+="<a style='text-decoration:none' onClick='product_start(this,"+result['venue_id']+")' href='javascript:;' title='发布'><i class='Hui-iconfont'>&#xe603;</i></a>";
+					}
+					item+="</li><div class='clear'></div>";
+					item+="</ul>";
+				});
+				
+				layer.close(index);
+				$('.orderlist-con').append(item);
+			}
+		}
+	});
+});
+function product_stop(obj,id){
+	layer.confirm('确认需要下架吗?..',function(index){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/venue_stop')}",
+			dataType:'json',
+			data:{'venue_id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("ul").find(".td-manage").prepend("<a style='text-decoration:none' onClick='product_start(this,"+id+")' href='javascript:;' title='发布'><i class='Hui-iconfont'>&#xe603;</i></a>");
+					$(obj).remove();
+					layer.msg('已成功下架',{icon:1,time:2000});
+				}else{
+					layer.msg('操作失败...',{icon:2,time:2000});
+				}
+			}
+		});		
+	});
+}
+function product_start(obj,id){
+	layer.confirm('确认要上架吗?..',function(index){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/venue_start')}",
+			dataType:'json',
+			data:{'venue_id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("ul").find(".td-manage").prepend("<a style='text-decoration:none' onClick='product_stop(this,id)' href='javascript:;' title='下架'><i class='Hui-iconfont'>&#xe6de;</i></a>");
+					$(obj).remove();
+					layer.msg('已成功上架',{icon:1,time:2000});
+				}else{
+					layer.msg('操作失败...',{icon:2,time:2000});
+				}
+			}
+		});		
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+	<form action="" enctype="multipart/form-data" method="post" class="form form-horizontal" id="form-admin-add">
+		
+		<input type="hidden" name="id" value="{$ball_team_id}" />
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>球队名称：</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" value="{$ballTeamMsg.name}" placeholder="" id="user-tel" name="name"  datatype="*2-16" nullmsg="球队名称不能为空">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		
+		
+		<div class="row cl">
+			<label class="form-label col-3">简称：</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" value="{$ballTeamMsg.short_name}" placeholder="" id="user-name" name="short_name">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>指定创建用户：</label>
+			<div class="formControls col-1.8">
+				<span class="select-box">
+					<select name="uid" id="uid" class="select">
+						<if condition="!empty($ballTeamMsg['username'])">
+							<option value="{$ballTeamMsg['uid']}">{$ballTeamMsg['username']}</option>
+							<else/>
+							<option value="{$ballTeamMsg['uid']}">{$ballTeamMsg['phone']}</option>
+						</if>
+					</select>
+				</span>
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-3"></label>
+			<div class="formControls col-8">
+				<input type="text" class="input-text" placeholder="请输入球员名字或电话查询" id="" name="search">
+			</div>
+		</div>
+		
+		<div class="row cl mt-20 skin-minimal">
+			<label class="form-label col-3"><span class="c-red">*</span>球队类型：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-1" checked="{$ballTeamMsg['type']==0?'checked':''}" value="0" name="type">
+			    <label for="radio-1">俱乐部</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-2" checked="{$ballTeamMsg['type']==1?'checked':''}" value="1" name="type">
+			    <label for="radio-2">FC</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-3" checked="{$ballTeamMsg['type']==2?'checked':''}" value="2" name="type">
+			    <label for="radio-2">队</label>
+			  </div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>队徽：</label>
+			<div class="formControls col-5"> 
+				<span class="btn-upload form-group">
+					<a href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont"></i> 添加队徽</a>
+					<input type="file" multiple="multipart/form-data" name="file-2" class="input-file">
+				</span> 
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3">领队人姓名：</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" value="{$ballTeamMsg.lead_name}" placeholder="" id="lead_name" name="lead_name">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-3">球队战点：</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" value="{$ballTeamMsg.san_score}" placeholder="" id="" name="san_score">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>球队成立时间：</label>
+			<div class="formControls col-5">
+				<input type="date" class="input-text" value="" requred placeholder="" name="build_time">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>地区：</label>
+			<div class="formControls col-1.8"> <span class="select-box">
+				<select name="province_id" id="province1" class="select">
+					<option value="0">===请选择省份===</option>
+				<foreach name="provinceMsg" item="val">
+					<option value="{$val.province_id}">{$val.province}</option>
+				</foreach>
+				</select>
+				</span> 
+			</div>     
+			<div class="formControls col-1.8"> <span class="select-box">
+				<select name="city_id" id="city" class="select">
+					<option value="0">===请选择城市===</option>
+				</select>
+				</span> 
+			</div>
+			<div class="formControls col-1.8"> <span class="select-box">
+				<select name="county_id" id="county" class="select">
+					<option value="0">===请选择地区===</option>
+				</select>
+				</span> 
+			</div>			
+		</div>
+			
+		
+		
+		<div class="row cl">
+			<label class="form-label col-3">球队说明：</label>
+			<div class="formControls col-5">
+				<textarea name="intro" cols="" rows="" class="textarea"  placeholder="说点什么...100个字符以内" dragonfly="true" onKeyUp="textarealength(this,100)"></textarea>
+				<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-9 col-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+$(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	if($('#close').html()==1){
+		layer.msg('修改成功',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);				
+	}else if($('#close').html()==2){
+		layer.msg('该名称已经注册！请重新申请..',{icon:2,time:2000});
+		setTimeout("window.parent.location.reload()",2000);
+	}
+});
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-admin-add").Validform({
+		tiptype:2,
+		callback:function(form){
+			form[0].submit();			
+		}
+	});
+});
+</script>
+<script type="text/javascript">
+$('#province1').change(function(){
+	var province_id=$("#province1 option:selected").val();
+	$.ajax({
+		type:'post',
+		dataType:'json',
+		url:"{:U('ActivityTeam/getCity')}",
+		data:{'province_id':province_id},
+		success:function(Msg){
+			if(Msg){
+				var item="";
+				$('#city').html('');
+				item+="<option value='0'>===请选择城市===</option>";
+				$.each(Msg,function(i,result){
+					item+="<option value='"+result['city_id']+"'>"+result['city']+"</option>";
+				});
+				$('#city').append(item);
+			}
+		}
+	});
+});
+$('#city').change(function(){
+	var city_id=$("#city option:selected").val();
+	$.ajax({
+		type:"post",
+		dataType:"json",
+		url:"{:U('ActivityTeam/getCounty')}",
+		data:{'city_id':city_id},
+		success:function(Msg){
+			if(Msg){
+				var item='';
+				$('#county').html('');
+				item+="<option value='0'>===请选择地区===</option>";
+				$.each(Msg,function(i,result){
+					item+="<option value='"+result['county_id']+"'>"+result['county']+"</option>";
+				});
+				$('#county').append(item);				
+			}
+		}
+	});
+});
+
+$("input[name='search']").blur(function(){
+	var search=$("input[name='search']").val();
+
+	$.ajax({
+		url:"{:U('ActivityTeam/getsearch')}",
+		type:'post',
+		dataType:'json',
+		data:{'search':search},
+		success:function(Msg){
+
+			if(Msg==''){
+				$('#uid').html('');
+				$('#uid').append("<option value='0'>==查无此记录==</option>");
+			}else{
+				var item='';
+				$('#uid').html('');
+				item +="<option value='0'>==请选择==</option>";
+				$.each(Msg,function(i,result){
+					item+="<option value='"+result['user_id']+"'>";
+					if(!result['nickname']){
+						item+=result['phone'];
+					}else{
+						item+=result['nickname'];
+					}
+
+					item+="</option>";
+				});
+				$('#uid').append(item);
+			}
+
+		}
+	});
+});
+</script>
+</body>
+</html>

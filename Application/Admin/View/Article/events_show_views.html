@@ -1,0 +1,72 @@
+
+<include file="Public:header" />
+
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 赛事动态 <span class="c-gray en">&gt;</span> 评论列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">	
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"></span> <span class="r">共有数据：<strong>{$countViews?$countViews:'0'}</strong> 条</span> </div>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="80">编号</th>
+					<th width="130">昵称</th>
+					<th>评论信息</th>
+					<th width="150">评论时间</th>
+					<th width="100">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<foreach name="viewMsg" item="val">
+				<tr class="text-c">
+					<td>{++$key}</td>
+					<td>{$val.nickname}</td>
+					<td>{$val.content}</td>	
+					<td>{$val.create_time}</td>				
+					<td class="f-14 product-brand-manage"> 
+					<a style="text-decoration:none" class="ml-5" onClick="picture_del(this,'{$val.id}')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+					</td>
+				</tr>
+			</foreach>
+			</tbody>
+		</table>
+	</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script><script type="text/javascript" src="__ROOT__/Public/Admin/lib/laypage/1.2/laypage.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.product.js"></script> 
+<script type="text/javascript">
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+	"aoColumnDefs": [
+	  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+	  {"orderable":false,"aTargets":[0,3]}// 制定列不参与排序
+	]
+});
+function picture_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type:'post',
+			url:"{:U('Article/views_del')}",
+			dataType:'json',
+			data:{'id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}else{
+					layer.msg('删除失败!',{icon:2,time:1000});
+				}
+			}
+		});
+		
+	});
+}
+</script>
+</body>
+</html>

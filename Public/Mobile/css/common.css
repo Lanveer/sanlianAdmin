@@ -1,0 +1,41 @@
+* { margin: 0; padding: 0;}
+body { font-family:'微软雅黑 Light','微软雅黑'; font-size: 14px; color:#fff; background-color: #f9f9f9;}
+html,body,div,ol,img,a,span,input,h1,h2,h3,h4,h5,h6,p{ margin:0;border:0;padding:0;font-style:normal;}
+img { display: block;}
+li { list-style: none;}
+input { outline:none;}
+textarea { outline:none;}
+.clear{clear:both;height:0px;width:100%;line-height:0px;visibility:hidden;overflow:hidden;}
+.pub_Break{word-break:break-all;word-wrap:break-word;}
+.pub_Beyhid{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-o-text-overflow:ellipsis;}
+a { text-decoration:none;}
+
+/*公共头部内容*/
+.heads {
+    width: 100%;
+    height: 40px;
+    border-top: 1px solid #d6d6d6;
+    border-bottom: 1px solid #423e3b;
+    -moz-box-shadow: 0 1px 10px #646464;
+    -webkit-box-shadow: 0 1px 10px #646464;
+    box-shadow: 0 1px 10px #646464;
+}
+.heads ul {
+    width: 100%;
+}
+.heads ul li {
+    width: 25%;
+    height: 40px;
+    float: left;
+    text-align: center;
+    color: #444444;
+    line-height: 40px;
+}
+.heads ul li img {
+    width: 100%;
+    height: 40px;
+}
+.exit {
+    background-color: #0666a5;
+    color: #fff!important;
+}

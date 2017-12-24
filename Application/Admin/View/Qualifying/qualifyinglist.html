@@ -1,0 +1,178 @@
+
+<include file="Public:header" />
+
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 排位赛管理 <span class="c-gray en">&gt;</span> 排位赛列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+	
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l">  <a class="btn btn-primary radius" href="{:U('Exportexcel/getQualifyingExcel')}"><i class="Hui-iconfont">&#xe644;</i> 导出信息</a></span> <span class="r">共有数据：<strong>{$countQualifying?$countQualifying:'0'}</strong> 条</span> </div>
+	<div class="mt-20">
+		<table class="table table-border table-bordered table-bg table-hover table-sort">
+			<thead>
+				<tr class="text-c">
+						<th width="200">主战队名称</th>
+						<th width="100">主战队领队</th>
+						<th width="200">客战队名称</th>
+						<th width="100">联系方式</th>
+						<th width="260">球场名称</th>
+						<!-- <th>赛事地址</th> -->
+						<th width="180">赛事开始时间</th>
+						<th width="80">是否匹配</th>
+						<th width="120">是否支付</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				<foreach name="qualifyingMsg" item="val">
+					<tr class="text-c va-m">
+						<td>{$val.homeTeamMsg.name}</td>
+						<td>{$val.homeTeamMsg.nickname}</td>
+						<td>{$val.guestTeam.name}</td>
+						<td>{$val.homeTeamMsg.phone}</td>
+						<td>{$val.courtMsg.name}</td>
+						<!-- <td class="text-c">{$val.courtMsg.address}</td> -->
+						<td class="text-c">{$val.start_time}</td>											
+						<td>
+						<if condition="$val['guest_team_id'] eq null">
+						<span class="label label-danger radius">未匹配</span>
+						<else />
+						<span class="label label-success radius">已匹配</span>
+						</if>
+						</td>
+						<td class="td-status">
+						<if condition="$val['pay_num'] eq 0">
+							<span class="label label-danger radius">未支付</span>
+						<elseif condition="$val['pay_num'] eq 1" />
+							<span class="label label-success radius">主队支付</span>
+						<elseif condition="$val['pay_num'] eq 2" />
+							<span class="label label-success radius">已支付</span>
+						</if>
+						</td>
+						<td class="td-manage">				
+							<a style="text-decoration:none" class="ml-5" onClick="picture_add('赛事详情','{:U('Indent/orderMsg',array('order_id'=>$val['home_order_id'],'type'=>0))}','{$val.order_id}','1000','800')" href="javascript:;" title="查看订单详情"><i class="Hui-iconfont">&#xe683;</i></a> 
+							<a style="text-decoration:none" class="ml-5" onClick="picture_add('编辑比分','{:U('Qualifying/qualify_edit',array('qualifying_id'=>$val['qualifying_id']))}','{$val.order_id}')" href="javascript:;" title="编辑比分"><i class="Hui-iconfont">&#xe6df;</i></a> 
+							<!-- <a style="text-decoration:none" class="ml-5" onClick="product_edit('同意退款','product-add.html','{$val.order_id}')" href="javascript:;" title="同意退款"><i class="Hui-iconfont">&#xe6e1;</i></a> 
+							<a style="text-decoration:none" class="ml-5" onClick="product_edit('拒绝退款','product-add.html','{$val.order_id}')" href="javascript:;" title="拒绝退款"><i class="Hui-iconfont">&#xe6dd;</i></a> --> 
+							
+							<a style="text-decoration:none" class="ml-5" onClick="product_del(this,'{$val.qualifying_id}')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> 
+						</td>
+					</tr>
+				</foreach>
+		</table>
+	</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/My97DatePicker/WdatePicker.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+	"aoColumnDefs": [
+	  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+	  {"orderable":false,"aTargets":[0,8]}// 制定列不参与排序
+	]
+});
+/*图片-添加*/
+function picture_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+function product_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			url:"{:U('Qualifying/qualify_del')}",
+			type:'post',
+			dataType:'json',
+			data:{'id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}else{
+					layer.msg('删除失败!',{icon:2,time:1000});
+				}
+			}
+		});
+		
+	});
+}
+/*图片-查看*/
+function picture_show(title,url,id){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-审核*/
+function picture_shenhe(obj,id){
+	layer.confirm('审核文章？', {
+		btn: ['通过','不通过'], 
+		shade: false
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="picture_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+		$(obj).remove();
+		layer.msg('已发布', {icon:6,time:1000});
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="picture_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
+		$(obj).remove();
+    	layer.msg('未通过', {icon:5,time:1000});
+	});	
+}
+/*图片-下架*/
+function picture_stop(obj,id){
+	layer.confirm('确认要下架吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="picture_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+		$(obj).remove();
+		layer.msg('已下架!',{icon: 5,time:1000});
+	});
+}
+
+/*图片-发布*/
+function picture_start(obj,id){
+	layer.confirm('确认要发布吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="picture_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+		$(obj).remove();
+		layer.msg('已发布!',{icon: 6,time:1000});
+	});
+}
+/*图片-申请上线*/
+function picture_shenqing(obj,id){
+	$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
+	$(obj).parents("tr").find(".td-manage").html("");
+	layer.msg('已提交申请，耐心等待审核!', {icon: 1,time:2000});
+}
+/*图片-编辑*/
+function picture_edit(title,url,id){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-删除*/
+function picture_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$(obj).parents("tr").remove();
+		layer.msg('已删除!',{icon:1,time:1000});
+	});
+}
+</script>
+</body>
+</html>

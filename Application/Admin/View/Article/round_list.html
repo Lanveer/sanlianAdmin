@@ -1,0 +1,291 @@
+<include file="Public:header" />
+<title>赛事轮次管理</title>
+
+<style>
+    .loader{
+        font-size: 16px !important;
+        margin: 0!important;
+        color: black !important;
+    }
+</style>
+
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 赛事管理 <span class="c-gray en">&gt;</span> 赛事轮次管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="row cl mb-15 pd-5">
+        <label class="form-label text-r col-xs-4 col-sm-3">类型：</label>
+        <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+            <div class="radio-box">
+                <input type="radio" id="radio-1" name="round_type" value="" checked>
+                <label for="radio-1">全部</label>
+            </div>
+            <div class="radio-box">
+                <input type="radio" id="radio-2" name="round_type" value="0">
+                <label for="radio-2">小组赛</label>
+            </div>
+
+            <div class="radio-box">
+                <input type="radio" id="radio-3" name="round_type" value="1">
+                <label for="radio-3">淘汰赛</label>
+            </div>
+
+            <div class="radio-box">
+                <input type="radio" id="radio-4" name="round_type" value="2">
+                <label for="radio-4">循环赛</label>
+            </div>
+
+        </div>
+    </div>
+    <div class="text-c"> 日期范围：
+        <literal>
+            <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
+            -
+            <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;">
+        </literal>
+        <span class="pipe">|</span>
+        <span class="select-box" style="width: 120px">
+            <select id="option" class="select" size="1" name="option">
+                <option value="0" selected>轮次ID</option>
+            </select>
+        </span>
+        <input type="text" class="input-text" style="width:250px" placeholder="" id="searchText" name="">
+        <button type="button" class="btn btn-success radius" onclick="search()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+    </div>
+
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" onclick="round_add()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加轮次</a>
+        </span>
+    </div>
+
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="40">ID</th>
+                <th width="70">标题</th>
+                <th width="30">类型</th>
+                <th width="30">轮次数</th>
+                <th width="100">比赛日期</th>
+                <th width="130">创建时间</th>
+                <th width="100">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var tableOption={
+        "autoWidth":false,
+        "processing":true,
+        "serverSide":true,
+        "searching": false,
+        "order": [[ 0, "desc" ]],//默认第几个排序
+        "ordering": true,
+        "bStateSave": true,//状态保存
+        "columnDefs": [
+            {"orderable":false,"aTargets":[5]}// 制定列不参与排序
+        ],
+        "ajax":{
+            "url":"__URL__/getRoundList/competition_id/{$competition_id}",
+            "type":"POST",
+            "data": function (d) {
+                var data = {};
+                var round_type = $("input[name='round_type']:checked").val();
+                var column = d['order'][0]['column'];
+                var datemin = $("#datemin").val();
+                var datemax = $("#datemax").val();
+                var search = $("#searchText").val();
+                var option = $("#option option:selected").val();
+                datemax = datemax?datemax+" 24:00:00":"";
+                data = {
+                    draw:d['draw'],
+                    offset:d['start'],
+                    limit:d['length'],
+                    order:d['order'][0]['dir'],
+                    sort:d['columns'][column]['data'],
+                    start_time:datemin,
+                    end_time:datemax,
+                    type:round_type,
+                    option:option,
+                    search:search
+                };
+                return data;
+            }
+        },
+        "columns":[
+            {"data":"round_id"},
+            {"data":"title"},
+            {
+                "data":"type",
+                "render": function (data, type, full) {
+                    var elem = "";
+                    if(data==0){
+                       elem = '小组赛';
+                    }else if (data==1){
+                        elem = '淘汰赛';
+                    }
+                    else if (data==2){
+                        elem = '循环赛';
+                    }else {
+                        elem = '<font color="red">出错了</font>'
+                    }
+                    return elem;
+                }
+            },
+            {
+                "data":"round_num",
+                "render":function(data,type,full){
+                    var elem = data;
+                    if(full.type==1){
+                        elem = '-'
+                    }
+                    return elem;
+                }
+            },
+            {
+                "data":"date",
+                "render": function (data, type, full) {
+                    var time = moment.unix(data).format("YYYY-MM-DD");
+                    return time;
+                }
+            },
+            {
+                "data":"create_time",
+                "render": function (data, type, full) {
+                    var time = moment.unix(data).format("YYYY-MM-DD HH:mm:ss");
+                    return time;
+                }
+            },
+            {
+                "data":null,
+                "defaultContent":"",
+                "createdCell": function (cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).addClass('td-manage f-14');
+                },
+                "render": function (data, type, full) {
+                    var elem = getManageEle(full.round_id,full);
+                    return elem;
+                }
+            }
+        ],
+        "createdRow": function (row,data,dataIndex) {
+            $(row).addClass('text-c');
+        }
+    };
+    /*
+     *   获取操作列的DOM
+     * */
+    function getManageEle(id,full){
+        var title = full.title;
+        var elem ="";
+        var check_elem = '<a title="查看" href="javascript:void(0);" onclick="round_check(this,\''+title+'\','+id+')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe695;</i></a> ';
+        var del_elem = '<a title="删除" href="javascript:void(0);" onclick="round_del(this,'+id+')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+        var edit_elem = '<a style="text-decoration:none" onClick="round_edit(\''+title+'\','+id+')" href="javascript:void(0);" title="修改"><i class="Hui-iconfont">&#xe6df;</i></a>';
+
+        elem+=(check_elem+edit_elem+del_elem);
+        return elem;
+    }
+
+    /*
+     *   搜索
+     * */
+    function search(){
+        table.ajax.reload();
+    }
+
+
+
+    $(function(){
+        window.table = $('table.table-sort').DataTable(tableOption);
+
+
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $('.table-sort tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+    });
+
+
+    /*修改标签*/
+    function module_edit(obj,id){
+        var url = "__URL__/editModule/module_id/"+id;
+        layer_show("修改模块",url,650,500);
+    }
+
+    /*帖子-删除*/
+    function round_del(obj,id){
+        var data = {
+            "id":id
+        };
+        layer.confirm('确认要删除吗？',function(index){
+            $.post("__URL__/delRound",data)
+                    .success(function () {
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    })
+                    .error(function (data) {
+                        layer.msg(data.responseText,{icon: 5,time:1000});
+                    })
+                    .always(function () {
+                        search();
+                    });
+
+        });
+    }
+
+    function order_refund(obj,id){
+        var data = {
+            "id":id
+        };
+        layer.confirm('确认要退款吗？',function(index){
+            $.post("__URL__/delDealOrder",data)
+                    .success(function () {
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    })
+                    .error(function (data) {
+                        layer.msg(data.responseText,{icon: 5,time:1000});
+                    })
+                    .always(function () {
+                        search();
+                    });
+
+        });
+    }
+
+    /*增加轮次*/
+    function round_add(){
+        var url = "__URL__/addRound?competition_id={$competition_id}";
+        layer_show("新增轮次",url,650,350);
+    }
+
+    /*用户-查看*/
+    function round_edit(title,id){
+        var url = "__URL__/editRound/id/"+id;
+        layer_show(title,url,450,560);
+    }
+
+    function order_show(title,order_id){
+        var url = "__MODULE__/Order/orderInfo/id/"+order_id;
+        layer_show(title,url,450,560);
+    }
+
+    function round_check(o,title,id){
+        var url = "__MODULE__/Article/saicheng/competition_id/{$competition_id}/round_id/"+id;
+        layer_show(title,url,650,560);
+    }
+</script>

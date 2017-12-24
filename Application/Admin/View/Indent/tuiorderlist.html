@@ -1,0 +1,242 @@
+
+<include file="Public:header" />
+
+<meta charset="UTF-8">
+
+<body class="pos-r">
+
+<div style="margin-left:0px;">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 
+	<if condition="$status eq 0">
+		待支付订单 
+	<elseif condition="$status eq 1" />
+		已支付订单 
+	<elseif condition="$status eq 2" />
+		待退款订单 
+	<elseif condition="$status eq 3" />
+		已退款订单 
+	</if>
+	
+	
+	<a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	<div class="pd-20">
+		
+		<div class="cl pd-5 bg-1 bk-gray mt-20"> 
+		<span class="l"> 
+            <a class="btn btn-primary radius" href="{:U('Indent/tuiorderlist',array('status'=>$status))}"><i class="Hui-iconfont">&#xe665;</i> 全部</a> 
+			<a class="btn btn-primary radius" href="{:U('Indent/tuiorderlist',array('status'=>$status,'type'=>1))}"><i class="Hui-iconfont">&#xe665;</i> 排位赛订单</a> 
+			<a class="btn btn-primary radius" href="{:U('Indent/tuiorderlist',array('status'=>$status,'type'=>2))}"><i class="Hui-iconfont">&#xe665;</i> 友谊赛订单</a>
+			 <a class="btn btn-primary radius" href="{:U('Exportexcel/getOrderExcel',array('status'=>$status,'type'=>$type))}"><i class="Hui-iconfont">&#xe644;</i> 导出信息</a>
+		</span> 
+		<span class="r">共有数据：<strong>{$countRefund?$countRefund:'0'}</strong> 条</span> 
+		</div>
+		<div class="mt-20">
+			<table class="table table-border table-bordered table-bg table-hover table-sort">
+				<thead>
+					<tr class="text-c">
+						<th width="80">订单编号</th>
+						<th width="100">支付用户</th>
+						<th width="100">订单类型</th>
+						<th width="100">支付金额</th>
+						<th width="100">支付方式</th>
+						<th width="180">交易号</th>
+						<th width="100">三联币抵扣金额</th>
+						<th width="100">退款原因</th>
+						<th width="100">是否优先退款</th>
+						<th width="150">创建时间</th>
+						<th width="120">状态</th>
+						<th width="100">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				<foreach name="refundOrder" item="val">
+					<tr class="text-c va-m">
+						<td>{$val.order_no}</td>						
+						<td>{$val.username.phone}</td>
+						<td>
+						<if condition="$val['order_type'] eq 0">
+							<span class="label label-success radius">排位赛</span>
+						<elseif condition="$val['order_type'] eq 1" />
+							<span class="label label-danger radius">友谊赛</span>
+						<elseif condition="$val['order_type'] eq 2" />
+							<span class="label label-default radius">充值</span>
+						</if>
+						</td>
+						<td>{$val.price}</td>
+						<td>
+							<if condition="$val['pay_type'] eq 1">
+								<span class="label label-default radius">支付宝</span>
+							<elseif condition="$val['pay_type'] eq 2" />
+								<span class="label label-success radius">微信</span>
+							</if>
+						</td>
+						<td class="text-c">{$val.trade_no}</td>
+						<td class="text-c">{$val.san_money}</td>
+						
+						<td><span class="price">{$val.reason}</span></td>
+						<td><span class="price">
+                        <if condition="$val['is_priority'] eq 1">
+								<span class="label label-default radius">是</span>
+							<else/>
+								<span class="label label-success radius">否</span>
+						</if>
+                        
+                        </span></td>
+	
+						<td><span class="price">{$val.create_time}</span></td>
+						<td class="td-status">
+						<if condition="$val['status'] eq 0">
+							<span class="label label-success radius">审核中</span>
+						<elseif condition="$val['status'] eq 1" />
+							<span class="label label-success radius">同意</span>
+						<elseif condition="$val['status'] eq 2" />
+							<span class="label label-success radius">拒绝</span>
+						</if>
+						</td>
+						<td class="td-manage">							
+							<a style="text-decoration:none" class="ml-5" onClick="product_add('订单详情','{:U('Indent/orderMsg',array('order_id'=>$val['order_id'],'type'=>$val['type']))}','{$val.order_id}','1000','800')" href="javascript:;" title="查看订单详情"><i class="Hui-iconfont">&#xe683;</i></a> 
+							<if condition="$status eq 2">
+							<a style="text-decoration:none" class="ml-5" onClick="order_refund('{$val.order_id}')" href="javascript:;" title="同意退款"><i class="Hui-iconfont">&#xe6e1;</i></a>
+							<a style="text-decoration:none" class="ml-5" onClick="admin_edit('产品编辑','product-add.html','{$val.order_id}')" href="javascript:;" title="拒绝退款"><i class="Hui-iconfont">&#xe6dd;</i></a> 
+							</if>
+						</td>
+					</tr>
+				</foreach>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+
+$('.table-sort').dataTable({
+	"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+	"bStateSave": true,//状态保存
+	"aoColumnDefs": [
+	  {"orderable":false,"aTargets":[0,7]}// 制定列不参与排序
+	]
+});
+/*图片-添加*/
+function product_add(title,url){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-查看*/
+function product_show(title,url,id){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+function admin_edit(title,url,id,w,h){
+	layer_show(title,url,w,h);
+}
+/*图片-审核*/
+function product_shenhe(obj,id){
+	layer.confirm('审核文章？', {
+		btn: ['通过','不通过'], 
+		shade: false
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="product_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+		$(obj).remove();
+		layer.msg('已发布', {icon:6,time:1000});
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="product_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
+		$(obj).remove();
+    	layer.msg('未通过', {icon:5,time:1000});
+	});	
+}
+/*图片-下架*/
+function product_stop(obj,id){
+	layer.confirm('确认要下架吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="product_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+		$(obj).remove();
+		layer.msg('已下架!',{icon: 5,time:1000});
+	});
+}
+
+/*图片-发布*/
+function product_start(obj,id){
+	layer.confirm('确认要发布吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="product_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+		$(obj).remove();
+		layer.msg('已发布!',{icon: 6,time:1000});
+	});
+}
+/*图片-申请上线*/
+function product_shenqing(obj,id){
+	$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
+	$(obj).parents("tr").find(".td-manage").html("");
+	layer.msg('已提交申请，耐心等待审核!', {icon: 1,time:2000});
+}
+/*图片-编辑*/
+function product_edit(title,url,id){
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url
+	});
+	layer.full(index);
+}
+/*图片-删除*/
+function product_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type:'post',
+			url:"{:U('Indent/order_del')}",
+			dataType:'json',
+			data:{'id':id},
+			success:function(Msg){
+				if(Msg){
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!',{icon:1,time:1000});
+				}
+			}
+		});		
+	});
+}
+
+
+/*订单-退款*/
+function order_refund(order_id){
+	var data = {
+		"order_id":order_id
+	};
+	layer.confirm('确认要退款吗？',function(index){
+		$.post("__URL__/refundNow",data)
+				.success(function (data) {
+					if(data['url']){
+						layer.msg('转入支付宝退款界面!',{icon: 1,time:1000});
+						layer_show("支付宝退款",data['url'],650,560);
+					}else{
+						layer.msg('退款成功!',{icon: 1,time:1000});
+					}
+				})
+				.error(function (data) {
+					layer.msg(data.responseText,{icon: 5,time:1500});
+				})
+				.always(function () {
+					search();
+				});
+	});
+}
+</script>
+</body>
+</html>

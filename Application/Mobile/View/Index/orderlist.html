@@ -1,0 +1,227 @@
+<include file="Public:header" />
+<div class="orderlist-con">
+    <div class="orderlist-con-title">订单列表</div>
+    <div class="order-input">
+        <input type="text" placeholder="搜索手机号" name="phone" class="tel-input">
+        <input type="text" placeholder="搜索订单预定时间,15-06-26 19:00" name="searchTime" class="time-input">
+        <div class="btn-search">搜索</div>
+    </div>
+    <div class="potion-con">
+        <span class="active" name="create_time">默认排序</span><span name="game_time">按预定订间排序</span><span name="money">按价格排序</span>
+    </div>
+    <div class="order-lists">
+        <ul class="order-lists-nav" style="background-color: #cdcdcd">
+            <li class="order-yuding-nav">预定时间</li>
+            <li class="order-name-nav">类型</li>
+            <li class="order-price-nav">价格</li>
+			<li class="order-manage-nav">操作</li>
+            <div class="clear"></div>
+        </ul>
+        <foreach name="orderMsg" item="val">
+        <a href="tel:{$val.phone}">
+        <ul class="order-lists-con"style="background-color:{$key%2==0?'':'#dddddd'}">
+            <li class="order-yuding pub_Beyhid">
+				{$val.game_time|substr=0,10}
+				<p>
+					{$val.game_time|substr=10,20}
+				</p>
+			</li>
+            <li class="order-name pub_Beyhid">
+            <if condition="$val['type'] eq 2">
+            	充值
+            <elseif condition="$val['type'] eq 0 or $val['type'] eq 3"  />
+            	(排位赛){$val['court']['court_name']}
+            <elseif condition="$val['type'] eq 1" />
+            	(友谊赛){$val['court']['court_name']}
+           	<elseif condition="$val['type'] eq 3" />
+           		应战
+			<elseif condition="$val['type'] eq 4" />
+				报名参加赛事
+            </if>
+            </li>
+            <li class="order-price pub_Beyhid">{$val['san_money']+$val['price']}</li>
+			<li class="order-manage pub_Beyhid">
+				<a style="text-decoration:none" onClick="setOrderRefundStatus('设置退款类型','{$val.order_id}')" href="javascript:void(0);" title="设置退款类型"><i class="Hui-iconfont">&#xe637;</i></a>
+			</li>
+            <div class="clear"></div>
+        </ul>
+        </a>
+        </foreach>        
+    </div>    
+</div>
+<div class="load-more">加载更多内容</div>
+
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script>
+
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/jquery-1.11.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__ROOT__/Public/Admin/css/jquery-ui.css" />
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/jquery-ui-1.10.4.custom.min.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/jquery.ui.datepicker-zh-CN.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/jquery-ui-timepicker-zh-CN.js"></script>
+<script type="text/javascript">
+	$( "input[name='searchTime']" ).datetimepicker({maxDate:new Date()});
+</script>
+<script type="text/javascript">
+var pageNum=1;
+var pageSize=10;
+$('.btn-search').click(function(){
+	var phone=$("input[name='phone']").val();
+	var searchTime=$("input[name='searchTime']").val();
+	
+	data={'phone':phone,'searchTime':searchTime};	
+	url="{:U('Index/search')}";
+	pageNum = 1;
+	sendAjax(data,url);
+});
+$('.potion-con span').click(function(){
+	var spanlen=$('.potion-con span').length;
+	var name=$(this).attr('name');
+	
+	for(var i=0;i<spanlen;i++){
+		$('.potion-con span').removeClass('active');
+	}
+	$(this).addClass('active');
+	pageNum=1;
+	$('.load-more').click();
+});
+$('.load-more').click(function(){
+
+	sendAjax({},'');
+});
+function sendAjax(data,url){
+	var index=layer.load(2);
+	var phone=$("input[name='phone']").val();
+	var searchTime=$("input[name='searchTime']").val();
+	var order=$('.active').attr('name');
+	var url = "{:U('Index/getOrderMore')}";
+
+	data['pageSize'] = pageSize;
+	data['pageNum'] = pageNum++;
+	data['phone'] = phone;
+	data['searchTime'] = searchTime;
+	data['order'] = order;
+	console.log(data);
+	$.ajax({
+		type:'post',
+		url:url,
+		dataType:'json',
+		data:data,
+		success:function(Msg){
+			$('.order-lists-con').html('');
+			if(Msg!=''){
+				var item='';
+				$.each(Msg,function(i,result){
+					item+="<a href='tel:"+result['phone']+"'>";
+					if(i%2==0){
+						item+="<ul class='order-lists-con'>";
+					}else{
+						item+="<ul class='order-lists-con' style='background-color:#dddddd'}'>";
+					}					
+					item+="<li class='order-yuding pub_Beyhid'>"+result['game_time'].substr(0,10)+"<p>";
+
+					item += result['game_time'].substr(10,20);
+					
+//					if(result['type']==2){
+//						item+=result['hours'];
+//					}else{
+//						item+=result['startHours']+"~"+result['endHours'];
+//					}
+					
+					item+="</p></li>";
+					item+="<li class='order-name pub_Beyhid'>";
+					if(result['type']==0 ||result['type']==3){
+						item+="(排位赛)"+result['court']['court_name'];
+					}else if(result['type']==1){
+						item+="(友谊赛)"+result['court']['court_name'];
+					}else if(result['type']==2){
+						item+="充值";
+					}else if(result['type']==3){
+						item+="应战";
+					}else if(result['type']==4){
+						item+="报名参加赛事";
+					}
+					item+="</li><li class='order-price pub_Beyhid'>"+(Number(result['price'])+Number(result['san_money']))+"</li>";
+					item+="<div class='clear'></div>";
+					item+="</ul></a>";
+				});
+				layer.close(index);
+				$('.order-lists').append(item);
+
+			}else{
+				layer.msg('数据加载完毕..',{icon:2,time:2000});
+				layer.close(index);
+			}
+		}
+	});
+}
+
+function setOrderRefundStatus(obj,id){
+	layer.confirm('设置退款类型', {
+				btn: ['可退款','不可退款','已使用'],
+				shade: false,
+				closeBtn: 1,
+				btn2:function(){
+					var data = {
+						"order_id":id,
+						"refund_type":4
+					};
+					$.post("__URL__/setRefundType",data)
+							.success(function (data) {
+								layer.msg('已设置为不可退款！', {icon:6,time:1000});
+								$(obj).parents("tr").find(".td-refund").html('<span class="label label-primary radius">不可申请退款</span>');
+							})
+							.error(function (data) {
+								layer.msg(data.responseText,{icon: 5,time:1000});
+							})
+							.always(function () {
+//							search();
+							});
+				},
+				btn3:function(){
+					var data = {
+						"order_id":id,
+						"refund_type":5
+					};
+					$.post("__URL__/setRefundType",data)
+							.success(function (data) {
+								layer.msg('已设置为已使用！', {icon:6,time:1000});
+								$(obj).parents("tr").find(".td-refund").html('<span class="label label-success radius">已使用</span>');
+							})
+							.error(function (data) {
+								layer.msg(data.responseText,{icon: 5,time:1000});
+							})
+							.always(function () {
+//							search();
+							});
+				},
+				cancel: function () {
+
+				}
+			},
+			function(){
+				var data = {
+					"order_id":id,
+					"refund_type":3
+				};
+				$.post("__URL__/setRefundType",data)
+						.success(function (data) {
+							layer.msg('已设置为可退款！', {icon:6,time:1000});
+							$(obj).parents("tr").find(".td-refund").html('<span class="label label-default radius">可申请退款</span>');
+						})
+						.error(function (data) {
+							layer.msg(data.responseText,{icon: 5,time:1000});
+						})
+						.always(function () {
+//							search();
+						});
+			});
+}
+</script>
+</body>
+</html>

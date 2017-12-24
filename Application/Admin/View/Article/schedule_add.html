@@ -1,0 +1,149 @@
+
+<include file="Public:header" />
+
+<body>
+<div class="pd-20">
+	<form action="{:U('Article/schedule_add')}" enctype="multipart/form-data" method="post" class="form form-horizontal" id="form-admin-add">
+		<input type="hidden" name="competition_id" value="{$competitionMsg.competition_id}">
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>赛事名称：</label>
+			<div class="formControls col-5">
+				<input type="text" class="input-text" value="{$competitionMsg.title}" disabled style="border:none">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>选择主战方球队：</label>
+			<div class="formControls col-1.8"> <span class="select-box">
+				<select name="home_team_id" id="home_team_id" class="select">
+					<option value="0">=请选择球队名称=</option>
+				<foreach name="home_teamMsg" item="val">
+					<option value="{$val.ball_team_id}">{$val.home_team_name}</option>
+				</foreach>
+				</select>
+				</span> 
+			</div>  
+						
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>选择应战方球队：</label>
+			<div class="formControls col-1.8"> <span class="select-box">
+				<select name="guest_team_id" id="guest_team_id" class="select">
+						<option value='0'>=请选择球队名称=</option>
+				</select>
+				</span> 
+			</div>  
+						
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>选择比赛球场：</label>
+			<div class="formControls col-1.8"> <span class="select-box">
+				<select name="court_id" class="select">
+					<option value="0">=请选择比赛球场=</option>
+				<foreach name="courtMsg" item="val">
+					<option value="{$val.court_id}">{$val.name}</option>
+				</foreach>
+				</select>
+				</span> 
+			</div>						
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>请选择比赛场次：</label>
+			<div class="formControls col-1.8"> <span class="select-box">
+				<select name="round_id" class="select">
+				<foreach name="roundMsg" item="val">
+					<option value="{$val.round_id}">{$val.title}</option>
+				</foreach>
+				</select>
+				</span> 
+			</div>						
+		</div>
+		
+		<div class="row cl mt-20 skin-minimal">
+			<label class="form-label col-3"><span class="c-red">*</span>是否推荐：</label>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-1" value="1" name="is_recommend">
+			    <label for="radio-1">是</label>
+			  </div>
+			  <div class="radio-box col-0">
+			    <input type="radio" id="radio-2" checked value="0" name="is_recommend">
+			    <label for="radio-2">否</label>
+			  </div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-3"><span class="c-red">*</span>比赛开始时间：</label>
+			<div class="formControls col-6">
+				<input type="text" class="input-text" value="" placeholder="请输入比赛开始时间，英文格式:2016-08-09 10:10:10" id="" name="start_time"  datatype="*" nullmsg="请输入比赛开始时间">
+			</div>
+			<div class="col-4"> </div>
+		</div>
+		
+		<div class="row cl">
+			<div class="col-9 col-offset-3">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/icheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/Validform/5.3.2/Validform.min.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/lib/layer/2.1/layer.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.js"></script> 
+<script type="text/javascript" src="__ROOT__/Public/Admin/js/H-ui.admin.js"></script> 
+<script type="text/javascript">
+$('#home_team_id').change(function(){
+	var home_team_id=$('#home_team_id option:selected').val();
+	var competition_id="{$competition_id}";
+	$.ajax({
+		type:'post',
+		url:"{:U('Article/get_guestTeam')}",
+		dataType:'json',
+		data:{'home_team_id':home_team_id,'competition_id':competition_id},
+		success:function(Msg){
+			$('#guest_team_id').html('');
+			var item="";
+			item="<option value='0'>=请选择球队名称=</option>";
+			$.each(Msg,function(i,result){
+				item +="<option value='"+result['ball_team_id']+"'>"+result['guest_team_name']+"</option>";
+			});
+			$('#guest_team_id').append(item);
+		}
+	});
+});
+$(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	if($('#close').html()==1){
+		layer.msg('添加成功',{icon:1,time:2000});
+		setTimeout("window.parent.location.reload()",2000);				
+	}else if($('#close').html()==2){
+		layer.msg('添加失败',{icon:2,time:2000});
+		setTimeout("window.parent.location.reload()",2000);				
+	}else if($('#close').html()==3){
+		layer.msg('时间格式不正确...',{icon:2,time:2000});
+		setTimeout("window.parent.location.reload()",2000);				
+	}
+});
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	
+	$("#form-admin-add").Validform({
+		tiptype:2,
+		callback:function(form){
+			form[0].submit();			
+		}
+	});
+});
+</script>
+</body>
+</html>
